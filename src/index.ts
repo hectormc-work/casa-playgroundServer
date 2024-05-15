@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { changeFeature } from "./max";
+import { changeFeature, getFeatureState } from "./max";
+import {Pace, FeatureState, Feature, RedLightGreenLightState, Games, Game} from './types';
 
 const app = express();
 const port = 8080;
@@ -8,48 +9,9 @@ const port = 8080;
 app.use(cors());
 app.use(express.json());
 
-export enum Pace {
-    Mixed = 'Mixed',
-    Short = 'Short',
-    Medium = 'Medium',
-    Long = 'Long',
-}
-
-export enum Games {
-    rlgl = 'Red Light, Green Light',
-}
-
-// Red Light, Green Light State
-export type RedLightGreenLightState = {
-    ongoing: boolean,
-    name: Games,
-    redPace?: Pace,
-    greenPace?: Pace,
-    duration?: number,
-    eastFlower?: boolean,
-    westFlower?: boolean,
-    trioFlowers?: boolean,
-    smallFlower?: boolean,
-    volume?: number,
-    muted?: boolean,
-    timeLeft?: number, // in ms, how much time is left in the game
-}
-
-export type FeatureState = {
-    volume?: number,
-    muted?: boolean,
-    option?: string, // Which of the Thump, Beats, etc. is currently active
-    subOption?: string // Flower’s Target: slow medium fast
-}
-
-export type Feature = {
-    name: string, // Unique Feature Identifier ( like trio-flower East)
-    state: FeatureState, // State object from above
-}
-
 // Storing game State here to be sent out
 const features: Feature[] = [];
-let currentGame: RedLightGreenLightState = {ongoing: false, name: Games.rlgl};
+let currentGame: Game = {name: Games.rlgl, state: {ongoing: false}};
 
 // Middleware for error handling
 function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
@@ -154,7 +116,7 @@ app.put('/features/:featureName', (req: Request, res: Response, next: NextFuncti
  */
 app.get('/games', (req: Request, res: Response, next: NextFunction) => {
     try {
-        if (currentGame.ongoing) {
+        if (currentGame.state.ongoing) {
             res.send({ currentGame });
         } else {
             res.send({ message: 'No game is currently running' });
