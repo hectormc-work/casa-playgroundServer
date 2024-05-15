@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import { changeFeature } from "./max";
 
 const app = express();
 const port = 8080;
@@ -131,6 +132,8 @@ app.put('/features/:featureName', (req: Request, res: Response, next: NextFuncti
         const { featureName } = req.params;
         const state: FeatureState = req.body;
 
+        const success = changeFeature(state);
+
         // TODO: Validate and apply the new state to the specified feature
         console.log(`Received settings for feature ${featureName}:`, state);
 
@@ -176,12 +179,12 @@ app.get('/games', (req: Request, res: Response, next: NextFunction) => {
 app.put('/games/:gameName', (req: Request, res: Response, next: NextFunction) => {
     try {
         const { gameName } = req.params;
-        const settings: RedLightGreenLightState = req.body;
+        const state: RedLightGreenLightState = req.body as RedLightGreenLightState;
 
         // TODO: Start the specified game with the provided settings
-        console.log(`Starting game ${gameName} with settings:`, settings);
+        console.log(`Starting game ${gameName} with settings:`, state);
 
-        res.status(202).send({ message: 'Game started', gameName, settings });
+        res.status(202).send({ message: 'Game started', gameName, state });
     } catch (error) {
         next(error);
     }
