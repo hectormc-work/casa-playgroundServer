@@ -3,27 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Games = exports.Pace = void 0;
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const max_1 = require("./max");
+const types_1 = require("./types");
 const app = (0, express_1.default)();
 const port = 8080;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-var Pace;
-(function (Pace) {
-    Pace["Mixed"] = "Mixed";
-    Pace["Short"] = "Short";
-    Pace["Medium"] = "Medium";
-    Pace["Long"] = "Long";
-})(Pace || (exports.Pace = Pace = {}));
-var Games;
-(function (Games) {
-    Games["rlgl"] = "Red Light, Green Light";
-})(Games || (exports.Games = Games = {}));
 // Storing game State here to be sent out
-const features = [];
-let currentGame = { ongoing: false, name: Games.rlgl };
+let features = [];
+let currentGame = { name: types_1.Games.rlgl, state: { ongoing: false } };
 // Middleware for error handling
 function errorHandler(err, req, res, next) {
     console.error(err.stack);
@@ -52,8 +42,9 @@ app.get('/', (req, res) => {
  */
 app.get('/features', (req, res, next) => {
     try {
+        features = (0, max_1.getAllFeatures)();
         // TODO: Retrieve and return all playground states
-        res.send({ playgroundStates: features });
+        res.send({ features: features });
     }
     catch (error) {
         next(error);
@@ -102,6 +93,7 @@ app.put('/features/:featureName', (req, res, next) => {
     try {
         const { featureName } = req.params;
         const state = req.body;
+        const success = (0, max_1.changeFeature)(state);
         // TODO: Validate and apply the new state to the specified feature
         console.log(`Received settings for feature ${featureName}:`, state);
         res.status(202).send({ message: 'Feature settings updated', featureName, state });
@@ -121,7 +113,7 @@ app.put('/features/:featureName', (req, res, next) => {
  */
 app.get('/games', (req, res, next) => {
     try {
-        if (currentGame.ongoing) {
+        if (currentGame.state.ongoing) {
             res.send({ currentGame });
         }
         else {
@@ -147,10 +139,10 @@ app.get('/games', (req, res, next) => {
 app.put('/games/:gameName', (req, res, next) => {
     try {
         const { gameName } = req.params;
-        const settings = req.body;
+        const state = req.body;
         // TODO: Start the specified game with the provided settings
-        console.log(`Starting game ${gameName} with settings:`, settings);
-        res.status(202).send({ message: 'Game started', gameName, settings });
+        console.log(`Starting game ${gameName} with settings:`, state);
+        res.status(202).send({ message: 'Game started', gameName, state });
     }
     catch (error) {
         next(error);
