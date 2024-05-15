@@ -1,12 +1,12 @@
-import {BabyMonstersState, FeatureState, Game, RedLightGreenLightState} from "./types";
+import {BabyMonstersState, Feature, FeatureState, Game, RedLightGreenLightState} from "./types";
 
 
-export function getFeatureState(featureName: string) {
-    return {} as FeatureState;
+export function getFeature(featureName: string) {
+    return {} as Feature;
 }
 
-export function getAllFeatureStates() {
-    return [] as FeatureState[];
+export function getAllFeatures() {
+    return [] as Feature[];
 }
 
 export function changeFeature(state: FeatureState) {

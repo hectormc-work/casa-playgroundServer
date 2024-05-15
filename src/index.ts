@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { changeFeature, getFeatureState } from "./max";
+import {changeFeature, getAllFeatures, getFeature} from "./max";
 import {Pace, FeatureState, Feature, RedLightGreenLightState, Games, Game} from './types';
 
 const app = express();
@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Storing game State here to be sent out
-const features: Feature[] = [];
+let features: Feature[] = [];
 let currentGame: Game = {name: Games.rlgl, state: {ongoing: false}};
 
 // Middleware for error handling
@@ -43,8 +43,9 @@ app.get('/', (req: Request, res: Response) => {
  */
 app.get('/features', (req: Request, res: Response, next: NextFunction) => {
     try {
+        features = getAllFeatures();
         // TODO: Retrieve and return all playground states
-        res.send({ playgroundStates: features });
+        res.send({ features: features });
     } catch (error) {
         next(error);
     }
