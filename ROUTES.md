@@ -18,7 +18,7 @@ Sends a 'Hello, world!' message.
     500 Internal Server Error: Server error.
 
 
-## POST /features/{featureName}
+## PUT /features/{featureName}
 Update Feature State
 
 ### Path Parameters
@@ -87,7 +87,7 @@ Get the state of a specific feature.
     500 Internal Server Error: Server error.
 
 
-## POST /games/{gameName}
+## PUT /games/{gameName}
 Start a Game
 
 ### Path Parameters

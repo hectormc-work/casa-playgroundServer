@@ -42,30 +42,6 @@ app.get('/', (req, res) => {
     res.send('Hello, world! Is this going through?');
 });
 /**
- * Change a feature's state to state given in req.body
- *
- * @name POST /features/:featureName
- *
- * @param {string} featureName - Name of the feature
- * @param {FeatureState} body - The new state for the feature
- * @return {object} - Success message with updated feature name and state
- *
- * @throws {400} - Bad request if validation fails
- * @throws {500} - Server error
- */
-app.post('/features/:featureName', (req, res, next) => {
-    try {
-        const { featureName } = req.params;
-        const state = req.body;
-        // TODO: Validate and apply the new state to the specified feature
-        console.log(`Received settings for feature ${featureName}:`, state);
-        res.status(202).send({ message: 'Feature settings updated', featureName, state });
-    }
-    catch (error) {
-        next(error);
-    }
-});
-/**
  * Get the state of ALL features in body
  *
  * @name GET /features
@@ -111,24 +87,24 @@ app.get('/features/:name', (req, res, next) => {
     }
 });
 /**
- * Start a global game
+ * Change a feature's state to state given in req.body
  *
- * @name POST /games/:gameName
+ * @name PUT /features/:featureName
  *
- * @param {string} gameName - Name of the game
- * @param {RedLightGreenLightState} body - The settings for the game
- * @return {object} - Success message with game name and settings
+ * @param {string} featureName - Name of the feature
+ * @param {FeatureState} body - The new state for the feature
+ * @return {object} - Success message with updated feature name and state
  *
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-app.post('/games/:gameName', (req, res, next) => {
+app.put('/features/:featureName', (req, res, next) => {
     try {
-        const { gameName } = req.params;
-        const settings = req.body;
-        // TODO: Start the specified game with the provided settings
-        console.log(`Starting game ${gameName} with settings:`, settings);
-        res.status(202).send({ message: 'Game started', gameName, settings });
+        const { featureName } = req.params;
+        const state = req.body;
+        // TODO: Validate and apply the new state to the specified feature
+        console.log(`Received settings for feature ${featureName}:`, state);
+        res.status(202).send({ message: 'Feature settings updated', featureName, state });
     }
     catch (error) {
         next(error);
@@ -151,6 +127,30 @@ app.get('/games', (req, res, next) => {
         else {
             res.send({ message: 'No game is currently running' });
         }
+    }
+    catch (error) {
+        next(error);
+    }
+});
+/**
+ * Start a global game
+ *
+ * @name POST /games/:gameName
+ *
+ * @param {string} gameName - Name of the game
+ * @param {RedLightGreenLightState} body - The settings for the game
+ * @return {object} - Success message with game name and settings
+ *
+ * @throws {400} - Bad request if validation fails
+ * @throws {500} - Server error
+ */
+app.put('/games/:gameName', (req, res, next) => {
+    try {
+        const { gameName } = req.params;
+        const settings = req.body;
+        // TODO: Start the specified game with the provided settings
+        console.log(`Starting game ${gameName} with settings:`, settings);
+        res.status(202).send({ message: 'Game started', gameName, settings });
     }
     catch (error) {
         next(error);
