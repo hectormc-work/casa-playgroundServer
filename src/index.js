@@ -1,26 +1,163 @@
 "use strict";
-// src/index.ts
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Games = exports.Pace = void 0;
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const port = 8080;
 app.use((0, cors_1.default)());
-// Middleware to parse JSON bodies
 app.use(express_1.default.json());
-// Define a route handler for the default home page
+var Pace;
+(function (Pace) {
+    Pace["Mixed"] = "Mixed";
+    Pace["Short"] = "Short";
+    Pace["Medium"] = "Medium";
+    Pace["Long"] = "Long";
+})(Pace || (exports.Pace = Pace = {}));
+var Games;
+(function (Games) {
+    Games["rlgl"] = "Red Light, Green Light";
+})(Games || (exports.Games = Games = {}));
+// Storing game State here to be sent out
+const features = [];
+let currentGame = { ongoing: false, name: Games.rlgl };
+// Middleware for error handling
+function errorHandler(err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send({ error: 'Something went wrong!' });
+}
+/**
+ * Sends a 'Hello, world' message.
+ *
+ * @name GET /
+ *
+ * @return {string} - Welcome message
+ *
+ * @throws {500} - Server error
+ */
 app.get('/', (req, res) => {
-    res.send('Hello, world!');
+    res.send('Hello, world! Is this going through?');
 });
-// Define a route handler for receiving POST requests
-app.post('/data', (req, res) => {
-    const data = req.body;
-    console.log('Received data:', data);
-    res.send('Data received');
+/**
+ * Change a feature's state to state given in req.body
+ *
+ * @name POST /features/:featureName
+ *
+ * @param {string} featureName - Name of the feature
+ * @param {FeatureState} body - The new state for the feature
+ * @return {object} - Success message with updated feature name and state
+ *
+ * @throws {400} - Bad request if validation fails
+ * @throws {500} - Server error
+ */
+app.post('/features/:featureName', (req, res, next) => {
+    try {
+        const { featureName } = req.params;
+        const state = req.body;
+        // TODO: Validate and apply the new state to the specified feature
+        console.log(`Received settings for feature ${featureName}:`, state);
+        res.status(202).send({ message: 'Feature settings updated', featureName, state });
+    }
+    catch (error) {
+        next(error);
+    }
 });
+/**
+ * Get the state of ALL features in body
+ *
+ * @name GET /features
+ *
+ * @return {object} - All playground states
+ *
+ * @throws {500} - Server error
+ */
+app.get('/features', (req, res, next) => {
+    try {
+        // TODO: Retrieve and return all playground states
+        res.send({ playgroundStates: features });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+/**
+ * Get the state of a specific feature in body
+ *
+ * @name GET /features/:name
+ *
+ * @param {string} name - Name of the feature
+ * @return {Feature} - The state of the specified feature
+ *
+ * @throws {404} - Feature not found
+ * @throws {500} - Server error
+ */
+app.get('/features/:name', (req, res, next) => {
+    try {
+        const { name } = req.params;
+        // TODO: Retrieve and return the state of the specified feature
+        const featureState = features.find(state => state.name === name);
+        if (featureState) {
+            res.send(featureState);
+        }
+        else {
+            res.status(404).send({ message: 'Feature not found' });
+        }
+    }
+    catch (error) {
+        next(error);
+    }
+});
+/**
+ * Start a global game
+ *
+ * @name POST /games/:gameName
+ *
+ * @param {string} gameName - Name of the game
+ * @param {RedLightGreenLightState} body - The settings for the game
+ * @return {object} - Success message with game name and settings
+ *
+ * @throws {400} - Bad request if validation fails
+ * @throws {500} - Server error
+ */
+app.post('/games/:gameName', (req, res, next) => {
+    try {
+        const { gameName } = req.params;
+        const settings = req.body;
+        // TODO: Start the specified game with the provided settings
+        console.log(`Starting game ${gameName} with settings:`, settings);
+        res.status(202).send({ message: 'Game started', gameName, settings });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+/**
+ * Get the state of the current game
+ *
+ * @name GET /games
+ *
+ * @return {object} - The current game state or a message indicating no game is running
+ *
+ * @throws {500} - Server error
+ */
+app.get('/games', (req, res, next) => {
+    try {
+        if (currentGame.ongoing) {
+            res.send({ currentGame });
+        }
+        else {
+            res.send({ message: 'No game is currently running' });
+        }
+    }
+    catch (error) {
+        next(error);
+    }
+});
+// Error handling middleware should be the last middleware
+app.use(errorHandler);
 // Start the Express server
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

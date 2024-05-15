@@ -14,9 +14,14 @@ export enum Pace {
     Long = 'Long',
 }
 
+export enum Games {
+    rlgl = 'Red Light, Green Light',
+}
+
 // Red Light, Green Light State
 export type RedLightGreenLightState = {
     ongoing: boolean,
+    name: Games,
     redPace?: Pace,
     greenPace?: Pace,
     duration?: number,
@@ -37,13 +42,13 @@ export type FeatureState = {
 }
 
 export type Feature = {
-    name: string, // Unique Playground Item Identifier
+    name: string, // Unique Feature Identifier ( like trio-flower East)
     state: FeatureState, // State object from above
 }
 
 // Storing game State here to be sent out
 const features: Feature[] = [];
-let currentGame: RedLightGreenLightState = {ongoing: false};
+let currentGame: RedLightGreenLightState = {ongoing: false, name: Games.rlgl};
 
 // Middleware for error handling
 function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
@@ -62,7 +67,7 @@ function errorHandler(err: Error, req: Request, res: Response, next: NextFunctio
  * @throws {500} - Server error
  */
 app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, world!');
+    res.send('Hello, world! Is this going through?');
 });
 
 /**
