@@ -1,17 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.startGame = exports.getCurrentGame = exports.changeFeature = exports.getAllFeatures = exports.getFeature = void 0;
-function getFeature(featureName) {
+exports.startGame = exports.getCurrentGame = exports.changeFeature = exports.getAllFeatures = exports.getFeatureState = void 0;
+const types_1 = require("./types");
+// Storing game State here to be sent out
+let features = [];
+let currentGame = { name: types_1.Games.rlgl, state: { ongoing: false } };
+function getFeatureState(featureName) {
+    // Query max patch
     return {};
 }
-exports.getFeature = getFeature;
+exports.getFeatureState = getFeatureState;
 function getAllFeatures() {
     return [];
 }
 exports.getAllFeatures = getAllFeatures;
 function changeFeature(state) {
     // Logic to change feature
-    return true; // true if change went through, else false
+    return {}; // true if change went through, else false
 }
 exports.changeFeature = changeFeature;
 function getCurrentGame() {
@@ -20,6 +25,6 @@ function getCurrentGame() {
 exports.getCurrentGame = getCurrentGame;
 function startGame(state) {
     // logic to start game
-    return true; // if game started properly
+    return {}; // if game started properly
 }
 exports.startGame = startGame;

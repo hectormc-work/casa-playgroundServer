@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import {changeFeature, getAllFeatures, getFeature} from "./max";
+import {changeFeature, getAllFeatures, getCurrentGame, getFeatureState} from "./max";
 import {Pace, FeatureState, Feature, RedLightGreenLightState, Games, Game} from './types';
 
 const app = express();
@@ -8,10 +8,6 @@ const port = 8080;
 
 app.use(cors());
 app.use(express.json());
-
-// Storing game State here to be sent out
-let features: Feature[] = [];
-let currentGame: Game = {name: Games.rlgl, state: {ongoing: false}};
 
 // Middleware for error handling
 function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
@@ -43,7 +39,7 @@ app.get('/', (req: Request, res: Response) => {
  */
 app.get('/features', (req: Request, res: Response, next: NextFunction) => {
     try {
-        features = getAllFeatures();
+        const features = getAllFeatures();
         // TODO: Retrieve and return all playground states
         res.send({ features: features });
     } catch (error) {
@@ -67,7 +63,7 @@ app.get('/features/:name', (req: Request, res: Response, next: NextFunction) => 
         const { name } = req.params;
 
         // TODO: Retrieve and return the state of the specified feature
-        const featureState = features.find(state => state.name === name);
+        const featureState = getFeatureState(name);
         if (featureState) {
             res.send(featureState);
         } else {
@@ -117,6 +113,7 @@ app.put('/features/:featureName', (req: Request, res: Response, next: NextFuncti
  */
 app.get('/games', (req: Request, res: Response, next: NextFunction) => {
     try {
+        const currentGame = getCurrentGame();
         if (currentGame.state.ongoing) {
             res.send({ currentGame });
         } else {

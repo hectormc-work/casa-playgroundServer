@@ -6,14 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const max_1 = require("./max");
-const types_1 = require("./types");
 const app = (0, express_1.default)();
 const port = 8080;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-// Storing game State here to be sent out
-let features = [];
-let currentGame = { name: types_1.Games.rlgl, state: { ongoing: false } };
 // Middleware for error handling
 function errorHandler(err, req, res, next) {
     console.error(err.stack);
@@ -42,7 +38,7 @@ app.get('/', (req, res) => {
  */
 app.get('/features', (req, res, next) => {
     try {
-        features = (0, max_1.getAllFeatures)();
+        const features = (0, max_1.getAllFeatures)();
         // TODO: Retrieve and return all playground states
         res.send({ features: features });
     }
@@ -65,7 +61,7 @@ app.get('/features/:name', (req, res, next) => {
     try {
         const { name } = req.params;
         // TODO: Retrieve and return the state of the specified feature
-        const featureState = features.find(state => state.name === name);
+        const featureState = (0, max_1.getFeatureState)(name);
         if (featureState) {
             res.send(featureState);
         }
@@ -113,6 +109,7 @@ app.put('/features/:featureName', (req, res, next) => {
  */
 app.get('/games', (req, res, next) => {
     try {
+        const currentGame = (0, max_1.getCurrentGame)();
         if (currentGame.state.ongoing) {
             res.send({ currentGame });
         }
