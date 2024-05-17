@@ -29,13 +29,13 @@ Update Feature State
 ### Request Body
 
 ```
-<JSON in the form of index.ts's FeatureState type>
+<JSON in the form of types.ts's FeatureState type>
 ```
 
 ### Response
 `202 Accepted: Success message with updated feature name and state.`
 
-    <JSON in the form of index.ts's Feature type>
+    <JSON in the form of types.ts's Feature type>
 
 ### Throws
     400 Bad Request: Bad request if validation fails.
@@ -53,7 +53,7 @@ Get the state of all features.
 
     {
       "playgroundStates": [
-        <JSONs in the form of index.ts's Feature type>
+        <JSONs in the form of types.ts's Feature type>
       ]
     }
 
@@ -75,7 +75,7 @@ Get the state of a specific feature.
 ### Response:
 `200 OK: Returns the state of the specified feature.`
 
-    <json in the form of index.ts's Feature type>
+    <json in the form of types.ts's Feature type>
 
 `404 Not Found: Feature not found.`
 
@@ -87,25 +87,19 @@ Get the state of a specific feature.
     500 Internal Server Error: Server error.
 
 
-## PUT /games/{gameName}
+## PUT /games
 Start a Game
-
-### Path Parameters
-| Parameter | Type   | Description             |
-|-----------|--------|--------------------------|
-| gameName  | string | The name of the game    |
 
 ### Request Body
 
-Look at index.ts's game state types for full detail of what can be returned
-
+types.ts's Game type
 
 ### Response
 `202 Accepted: Success message with game name and settings.`
 
     {
       "message": "Game started",
-      "currentGame": <Look at index.ts's game state types for full description of what this can contain>
+      "currentGame": <Look at types.ts's game state types for full description of what this can contain>
     }
 
 ### Throws
@@ -123,7 +117,7 @@ Get the state of the current game.
 `200 OK: Returns the current game state or a message indicating no game is running.`
 
     {
-      "currentGame": <Look at index.ts's game state types for full description of what this can contain>
+      "currentGame": <Look at types.ts's game state types for full description of what this can contain>
     }
 
 `200 OK: No game is currently running.`
