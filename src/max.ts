@@ -1,10 +1,10 @@
-import {BabyMonstersState, Feature, FeatureState, Game, GameName, RedLightGreenLightState} from "./types";
+import {BabyMonstersState, Feature, FeatureName, FeatureState, Game, GameName, RedLightGreenLightState} from "./types";
 
 // Storing game State here to be sent out
 let features = {} as {[key: string]: FeatureState};
 let currentGame: Game = {name: GameName.rlgl, state: {ongoing: true}};
 
-export function getFeatureState(featureName: string) {
+export function getFeatureState(featureName: FeatureName) {
     return features[featureName];
 }
 
@@ -12,7 +12,7 @@ export function getAllFeatures() {
     return features;
 }
 
-export function changeFeature(featureName: string, state: FeatureState) {
+export function changeFeature(featureName: FeatureName, state: FeatureState) {
     features[featureName] = state;
 
     return true

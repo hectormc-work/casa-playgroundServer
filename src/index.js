@@ -1,20 +1,20 @@
-import express, { Request, Response, NextFunction } from 'express';
-import cors from 'cors';
-import {changeFeature, getAllFeatures, getCurrentGame, getFeatureState, startGame} from "./max";
-import {Pace, FeatureState, Feature, RedLightGreenLightState, GameName, Game, FeatureName} from './types';
-
-const app = express();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const max_1 = require("./max");
+const app = (0, express_1.default)();
 const port = 8080;
-
-app.use(cors());
-app.use(express.json());
-
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
 // Middleware for error handling
-function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
+function errorHandler(err, req, res, next) {
     console.error(err.stack);
     res.status(500).send({ error: 'Something went wrong!' });
 }
-
 /**
  * Sends a 'Hello, world' message.
  *
@@ -24,10 +24,9 @@ function errorHandler(err: Error, req: Request, res: Response, next: NextFunctio
  *
  * @throws {500} - Server error
  */
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (req, res) => {
     res.send('Hello, world! Is this going through?');
 });
-
 /**
  * Get the state of ALL features in body
  *
@@ -37,15 +36,15 @@ app.get('/', (req: Request, res: Response) => {
  *
  * @throws {500} - Server error
  */
-app.get('/features', (req: Request, res: Response, next: NextFunction) => {
+app.get('/features', (req, res, next) => {
     try {
-        const features = getAllFeatures();
+        const features = (0, max_1.getAllFeatures)();
         res.status(200).send({ message: 'Retrieved all Features', features: features });
-    } catch (error) {
+    }
+    catch (error) {
         next(error);
     }
 });
-
 /**
  * Get the state of a specific feature in body
  *
@@ -57,23 +56,22 @@ app.get('/features', (req: Request, res: Response, next: NextFunction) => {
  * @throws {404} - Feature not found
  * @throws {500} - Server error
  */
-app.get('/features/:name', (req: Request, res: Response, next: NextFunction) => {
+app.get('/features/:name', (req, res, next) => {
     try {
         const { name } = req.params;
-        const state = getFeatureState(name as FeatureName);
-        const feature = { name, state } as Feature;
-
+        const state = (0, max_1.getFeatureState)(name);
+        const feature = { name, state };
         if (state) {
             res.status(200).send({ message: 'Retrieved Feature', feature });
-        } else {
+        }
+        else {
             res.status(404).send({ message: 'Feature not found', feature });
         }
-
-    } catch (error) {
+    }
+    catch (error) {
         next(error);
     }
 });
-
 /**
  * Change a feature's state to state given in req.body
  *
@@ -86,25 +84,23 @@ app.get('/features/:name', (req: Request, res: Response, next: NextFunction) => 
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-app.put('/features/:name', (req: Request, res: Response, next: NextFunction) => {
+app.put('/features/:name', (req, res, next) => {
     try {
         const { name } = req.params;
-        const state: FeatureState = req.body;
-        const feature = { name, state } as Feature;
-
-        const success = changeFeature(name as FeatureName, state);
-
+        const state = req.body;
+        const feature = { name, state };
+        const success = (0, max_1.changeFeature)(name, state);
         if (success) {
             res.status(200).send({ message: 'Changed Feature', feature });
-        } else {
+        }
+        else {
             res.status(400).send({ message: 'Could not Change Feature', feature });
         }
-
-    } catch (error) {
+    }
+    catch (error) {
         next(error);
     }
 });
-
 /**
  * Get the state of the current game
  *
@@ -114,19 +110,20 @@ app.put('/features/:name', (req: Request, res: Response, next: NextFunction) => 
  *
  * @throws {500} - Server error
  */
-app.get('/games', (req: Request, res: Response, next: NextFunction) => {
+app.get('/games', (req, res, next) => {
     try {
-        const game = getCurrentGame();
+        const game = (0, max_1.getCurrentGame)();
         if (game.state.ongoing) {
             res.send({ game });
-        } else {
+        }
+        else {
             res.send({ message: 'No game is currently running' });
         }
-    } catch (error) {
+    }
+    catch (error) {
         next(error);
     }
 });
-
 /**
  * Start a global game
  *
@@ -139,24 +136,23 @@ app.get('/games', (req: Request, res: Response, next: NextFunction) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-app.put('/games', (req: Request, res: Response, next: NextFunction) => {
+app.put('/games', (req, res, next) => {
     try {
-        const game = req.body as Game;
-        const success = startGame(game);
-
+        const game = req.body;
+        const success = (0, max_1.startGame)(game);
         if (success) {
             res.status(200).send({ message: 'Game started', game });
-        } else {
+        }
+        else {
             res.status(400).send({ message: 'Game could not be started' });
         }
-    } catch (error) {
+    }
+    catch (error) {
         next(error);
     }
 });
-
 // Error handling middleware should be the last middleware
 app.use(errorHandler);
-
 // Start the Express server
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

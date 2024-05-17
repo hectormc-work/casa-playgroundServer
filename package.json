@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon",
+    "build": "npx tsc",
+    "serve": "nodemon",
+    "serve-js": "node src/index.js",
     "web": "ssh -R 80:localhost:8080 nokey@localhost.run"
   },
   "keywords": [],
