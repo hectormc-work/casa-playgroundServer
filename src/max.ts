@@ -1,30 +1,28 @@
 import {BabyMonstersState, Feature, FeatureState, Game, Games, RedLightGreenLightState} from "./types";
 
 // Storing game State here to be sent out
-let features: Feature[] = [];
-let currentGame: Game = {name: Games.rlgl, state: {ongoing: false}};
+let features = {} as {[key: string]: FeatureState};
+let currentGame: Game = {name: Games.rlgl, state: {ongoing: true}};
 
 export function getFeatureState(featureName: string) {
-    // Query max patch
-    return {} as FeatureState;
+    return features[featureName];
 }
 
 export function getAllFeatures() {
-    return [] as Feature[];
+    return features;
 }
 
-export function changeFeature(state: FeatureState) {
-    // Logic to change feature
+export function changeFeature(featureName: string, state: FeatureState) {
+    features[featureName] = state;
 
-    return {} as Feature // true if change went through, else false
+    return true
 }
 
 export function getCurrentGame() {
-    return {} as Game
+    return currentGame
 }
 
-export function startGame(state: RedLightGreenLightState | BabyMonstersState) {
-    // logic to start game
-
-    return {} as Game // if game started properly
+export function startGame(game: Game) {
+    currentGame = game
+    return true
 }

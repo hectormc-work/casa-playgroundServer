@@ -8,8 +8,8 @@ export enum Pace {
 export type FeatureState = {
     volume?: number,
     muted?: boolean,
-    option?: string, // Which of the Thump, Beats, etc. is currently active
-    subOption?: string // Flower’s Target: slow medium fast
+    mode?: string, // Which of the Thump, Beats, etc. is currently active
+    modeOption?: string // Flower’s Target: slow medium fast
 }
 
 export type Feature = {

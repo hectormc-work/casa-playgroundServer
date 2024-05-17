@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import {changeFeature, getAllFeatures, getCurrentGame, getFeatureState} from "./max";
+import {changeFeature, getAllFeatures, getCurrentGame, getFeatureState, startGame} from "./max";
 import {Pace, FeatureState, Feature, RedLightGreenLightState, Games, Game} from './types';
 
 const app = express();
@@ -40,8 +40,7 @@ app.get('/', (req: Request, res: Response) => {
 app.get('/features', (req: Request, res: Response, next: NextFunction) => {
     try {
         const features = getAllFeatures();
-        // TODO: Retrieve and return all playground states
-        res.send({ features: features });
+        res.status(200).send({ message: 'Retrieved all Features', features: features });
     } catch (error) {
         next(error);
     }
@@ -59,16 +58,18 @@ app.get('/features', (req: Request, res: Response, next: NextFunction) => {
  * @throws {500} - Server error
  */
 app.get('/features/:name', (req: Request, res: Response, next: NextFunction) => {
+    console.log('hi');
     try {
         const { name } = req.params;
+        const state = getFeatureState(name);
+        const feature = { name, state } as Feature;
 
-        // TODO: Retrieve and return the state of the specified feature
-        const featureState = getFeatureState(name);
-        if (featureState) {
-            res.send(featureState);
+        if (state) {
+            res.status(200).send({ message: 'Retrieved Feature', feature });
         } else {
-            res.status(404).send({ message: 'Feature not found' });
+            res.status(404).send({ message: 'Feature not found', feature });
         }
+
     } catch (error) {
         next(error);
     }
@@ -77,26 +78,29 @@ app.get('/features/:name', (req: Request, res: Response, next: NextFunction) => 
 /**
  * Change a feature's state to state given in req.body
  *
- * @name PUT /features/:featureName
+ * @name PUT /features/:name
  *
- * @param {string} featureName - Name of the feature
+ * @param {string} name - Name of the feature
  * @param {FeatureState} body - The new state for the feature
  * @return {object} - Success message with updated feature name and state
  *
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-app.put('/features/:featureName', (req: Request, res: Response, next: NextFunction) => {
+app.put('/features/:name', (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { featureName } = req.params;
+        const { name } = req.params;
         const state: FeatureState = req.body;
+        const feature = { name, state } as Feature;
 
-        const success = changeFeature(state);
+        const success = changeFeature(name, state);
 
-        // TODO: Validate and apply the new state to the specified feature
-        console.log(`Received settings for feature ${featureName}:`, state);
+        if (success) {
+            res.status(200).send({ message: 'Changed Feature', feature });
+        } else {
+            res.status(400).send({ message: 'Could not Change Feature', feature });
+        }
 
-        res.status(202).send({ message: 'Feature settings updated', featureName, state });
     } catch (error) {
         next(error);
     }
@@ -113,9 +117,9 @@ app.put('/features/:featureName', (req: Request, res: Response, next: NextFuncti
  */
 app.get('/games', (req: Request, res: Response, next: NextFunction) => {
     try {
-        const currentGame = getCurrentGame();
-        if (currentGame.state.ongoing) {
-            res.send({ currentGame });
+        const game = getCurrentGame();
+        if (game.state.ongoing) {
+            res.send({ game });
         } else {
             res.send({ message: 'No game is currently running' });
         }
@@ -127,7 +131,7 @@ app.get('/games', (req: Request, res: Response, next: NextFunction) => {
 /**
  * Start a global game
  *
- * @name POST /games/:gameName
+ * @name PUT /games/
  *
  * @param {string} gameName - Name of the game
  * @param {RedLightGreenLightState} body - The settings for the game
@@ -136,15 +140,16 @@ app.get('/games', (req: Request, res: Response, next: NextFunction) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-app.put('/games/:gameName', (req: Request, res: Response, next: NextFunction) => {
+app.put('/games', (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { gameName } = req.params;
-        const state: RedLightGreenLightState = req.body as RedLightGreenLightState;
+        const game = req.body as Game;
+        const success = startGame(game);
 
-        // TODO: Start the specified game with the provided settings
-        console.log(`Starting game ${gameName} with settings:`, state);
-
-        res.status(202).send({ message: 'Game started', gameName, state });
+        if (success) {
+            res.status(200).send({ message: 'Game started', game });
+        } else {
+            res.status(400).send({ message: 'Game could not be started' });
+        }
     } catch (error) {
         next(error);
     }
