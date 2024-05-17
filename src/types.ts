@@ -1,3 +1,58 @@
+// Features
+
+export enum Mode {
+    funky = 'Funky',
+    orchestra = 'Orchestra',
+    beats = 'Beats',
+    target = 'Target',
+    brash = 'Brash',
+    thump = 'Thump',
+    musicBox = 'Music Box',
+    path = 'Path',
+    space = 'Space',
+    jungle = 'Jungle',
+    farm = 'Farm',
+    trains = 'Trains'
+}
+
+export enum TargetOption {
+    fast = 'Fast',
+    medium = 'Medium',
+    slow = 'Slow'
+}
+
+export type FeatureState = {
+    volume?: number,
+    muted?: boolean,
+    mode?: Mode,
+    modeOption?: TargetOption
+}
+
+export enum FeatureName {
+    flowerTrioLeft = 'flowerTrioLeft',
+    flowerTrioRight = 'flowerTrioRight',
+    flowerTrioMiddle = 'flowerTrioMiddle',
+    flowerTopLeft = 'flowerTopLeft',
+    flowerTopRight = 'flowerTopRight',
+    flowerBottomLeft = 'flowerBottomLeft',
+    kalliroscope = 'kalliroscope',
+    eastStairs = 'eastStairs',
+    westStairs = 'westStairs',
+    conductor = 'conductor',
+}
+
+export type Feature = {
+    name: FeatureName,
+    state: FeatureState,
+}
+
+// Games
+
+export enum GameName {
+    rlgl = 'Red Light, Green Light',
+    monster = 'Baby Monsters',
+}
+
 export enum Pace {
     Mixed = 'Mixed',
     Short = 'Short',
@@ -5,32 +60,17 @@ export enum Pace {
     Long = 'Long',
 }
 
-export type FeatureState = {
-    volume?: number,
-    muted?: boolean,
-    mode?: string, // Which of the Thump, Beats, etc. is currently active
-    modeOption?: string // Flower’s Target: slow medium fast
-}
-
-export type Feature = {
-    name: string, // Unique Feature Identifier ( like trio-flower East)
-    state: FeatureState, // State object from above
-}
-
-
-// Red Light, Green Light State
 export type RedLightGreenLightState = {
-    ongoing: boolean,
     redPace?: Pace,
     greenPace?: Pace,
     duration?: number,
+    ongoing?: boolean,
     eastFlower?: boolean,
     westFlower?: boolean,
     trioFlowers?: boolean,
     smallFlower?: boolean,
     volume?: number,
     muted?: boolean,
-    timeLeft?: number, // in ms, how much time is left in the game
 }
 
 export type BabyMonstersState = {
@@ -38,12 +78,7 @@ export type BabyMonstersState = {
     numberOfMonsters?: number,
 }
 
-export enum Games {
-    rlgl = 'Red Light, Green Light',
-    monster = 'Baby Monsters',
-}
-
 export type Game = {
-    name: Games,
-    state: RedLightGreenLightState | BabyMonstersState
+    name: GameName,
+    state: RedLightGreenLightState | BabyMonstersState,
 }

@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import {changeFeature, getAllFeatures, getCurrentGame, getFeatureState, startGame} from "./max";
-import {Pace, FeatureState, Feature, RedLightGreenLightState, Games, Game} from './types';
+import {Pace, FeatureState, Feature, RedLightGreenLightState, GameName, Game} from './types';
 
 const app = express();
 const port = 8080;
