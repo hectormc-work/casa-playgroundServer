@@ -58,7 +58,6 @@ app.get('/features', (req: Request, res: Response, next: NextFunction) => {
  * @throws {500} - Server error
  */
 app.get('/features/:name', (req: Request, res: Response, next: NextFunction) => {
-    console.log('hi');
     try {
         const { name } = req.params;
         const state = getFeatureState(name);
