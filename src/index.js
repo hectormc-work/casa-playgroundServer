@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const max_1 = require("./max");
+const types_1 = require("./types");
 const app = (0, express_1.default)();
 const port = 8080;
 app.use((0, cors_1.default)());
@@ -113,12 +114,7 @@ app.put('/features/:name', (req, res, next) => {
 app.get('/games', (req, res, next) => {
     try {
         const game = (0, max_1.getCurrentGame)();
-        if (game.isOngoing()) {
-            res.send({ game });
-        }
-        else {
-            res.send({ message: 'No game is currently running' });
-        }
+        res.send({ message: 'Got CurrentGame', game });
     }
     catch (error) {
         next(error);
@@ -138,7 +134,7 @@ app.get('/games', (req, res, next) => {
  */
 app.put('/games', (req, res, next) => {
     try {
-        const game = req.body;
+        const game = new types_1.Game(req.body);
         const success = (0, max_1.startGame)(game);
         if (success) {
             res.status(200).send({ message: 'Game started', game });

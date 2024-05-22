@@ -59,9 +59,6 @@ var Pace;
 })(Pace || (exports.Pace = Pace = {}));
 class Game {
     constructor(gameObject) {
-        this.setGame(gameObject);
-    }
-    setGame(gameObject) {
         this.name = gameObject.name;
         this.duration = gameObject.duration;
         this.startTime = gameObject.startTime;
@@ -74,9 +71,6 @@ class Game {
             return Date.now() < (this.startTime + this.duration);
         }
         return false;
-    }
-    static fromJSON(gameObject) {
-        return new Game(gameObject);
     }
 }
 exports.Game = Game;

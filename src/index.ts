@@ -117,11 +117,7 @@ app.put('/features/:name', (req: Request, res: Response, next: NextFunction) => 
 app.get('/games', (req: Request, res: Response, next: NextFunction) => {
     try {
         const game = getCurrentGame();
-        if (game.isOngoing()) {
-            res.send({ game });
-        } else {
-            res.send({ message: 'No game is currently running' });
-        }
+        res.send({ message: 'Got CurrentGame', game });
     } catch (error) {
         next(error);
     }

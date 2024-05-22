@@ -56,7 +56,7 @@ function loadState() {
     const rawData = fs.readFileSync(filePath, 'utf8');
     const state = JSON.parse(rawData);
     features = state.features;
-    currentGame = types_1.Game.fromJSON(state.currentGame);
+    currentGame = new types_1.Game(state.currentGame);
     return true;
 }
 exports.loadState = loadState;
