@@ -113,7 +113,7 @@ app.put('/features/:name', (req, res, next) => {
 app.get('/games', (req, res, next) => {
     try {
         const game = (0, max_1.getCurrentGame)();
-        if (game.state.ongoing) {
+        if (game.isOngoing()) {
             res.send({ game });
         }
         else {
@@ -156,4 +156,5 @@ app.use(errorHandler);
 // Start the Express server
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
+    console.log((0, max_1.loadState)() ? 'Successfully loaded State' : 'Failed to load State');
 });

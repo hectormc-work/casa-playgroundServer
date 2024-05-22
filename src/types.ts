@@ -1,18 +1,26 @@
 // Features
 
 export enum Mode {
-    funky = 'Funky',
-    orchestra = 'Orchestra',
-    beats = 'Beats',
-    target = 'Target',
-    brash = 'Brash',
-    thump = 'Thump',
-    musicBox = 'Music Box',
-    path = 'Path',
+    //flower
+    funky = 'flower_gtr',
+    orchestra = 'flower_orch',
+    beats = 'flower_init',
+    target = 'target_test',
+    brash = 'bold_and_brash',
+    thump = 'big_thump',
+    //stairs
+    guitar = 'Guitar_Remix',
+    orchestraStairs = 'orchestra_remix',
+    beatsStairs = 'Funkybeats_Remix',
+    path = 'Center_Pathway',
     space = 'Space',
-    jungle = 'Jungle',
-    farm = 'Farm',
-    trains = 'Trains'
+    jungle = 'animalsForest',
+    farm = 'farm_animals',
+    trains = 'Trains',
+    //kalliroscope
+    musicBox = 'Music Box',
+    //games
+    monster = 'Monster'
 }
 
 export enum TargetOption {
@@ -29,12 +37,12 @@ export type FeatureState = {
 }
 
 export enum FeatureName {
-    flowerTrioLeft = 'flowerTrioLeft',
-    flowerTrioRight = 'flowerTrioRight',
-    flowerTrioMiddle = 'flowerTrioMiddle',
-    flowerTopLeft = 'flowerTopLeft',
-    flowerTopRight = 'flowerTopRight',
-    flowerBottomLeft = 'flowerBottomLeft',
+    flowerTrioLeft = 'flowerC',
+    flowerTrioRight = 'flowerD',
+    flowerTrioMiddle = 'flowerE',
+    flowerWest = 'flowerB',
+    flowerEast = 'flowerA',
+    flowerSmall = 'flowerF',
     kalliroscope = 'kalliroscope',
     eastStairs = 'eastStairs',
     westStairs = 'westStairs',
@@ -60,25 +68,49 @@ export enum Pace {
     Long = 'Long',
 }
 
-export type RedLightGreenLightState = {
+export type RedLightGreenLightOptions = {
     redPace?: Pace,
     greenPace?: Pace,
-    duration?: number,
-    ongoing?: boolean,
     eastFlower?: boolean,
     westFlower?: boolean,
     trioFlowers?: boolean,
     smallFlower?: boolean,
-    volume?: number,
-    muted?: boolean,
 }
 
-export type BabyMonstersState = {
-    ongoing: boolean,
+export type BabyMonstersOptions = {
     numberOfMonsters?: number,
 }
 
-export type Game = {
-    name: GameName,
-    state: RedLightGreenLightState | BabyMonstersState,
+interface GameJSON {
+    name?: GameName;
+    duration?: number;
+    startTime?: number;
+    volume?: number;
+    muted?: boolean;
+    options?: RedLightGreenLightOptions | BabyMonstersOptions;
+}
+
+export class Game {
+    name?: GameName;
+    duration?: number;
+    startTime?: number;
+    volume?: number;
+    muted?: boolean;
+    options?: RedLightGreenLightOptions | BabyMonstersOptions;
+
+    constructor(gameObject: GameJSON) {
+        this.name = gameObject.name;
+        this.duration = gameObject.duration;
+        this.startTime = gameObject.startTime;
+        this.volume = gameObject.volume;
+        this.muted = gameObject.muted;
+        this.options = gameObject.options;
+    }
+
+    isOngoing() {
+        if (this.startTime && this.duration) {
+            return Date.now() < (this.startTime + this.duration);
+        }
+        return false;
+    }
 }

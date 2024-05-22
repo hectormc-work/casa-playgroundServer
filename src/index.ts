@@ -1,7 +1,7 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import cors from 'cors';
-import {changeFeature, getAllFeatures, getCurrentGame, getFeatureState, startGame} from "./max";
-import {Pace, FeatureState, Feature, RedLightGreenLightState, GameName, Game, FeatureName} from './types';
+import {changeFeature, getAllFeatures, getCurrentGame, getFeatureState, loadState, startGame} from "./max";
+import {Feature, FeatureName, FeatureState, Game} from './types';
 
 const app = express();
 const port = 8080;
@@ -117,7 +117,7 @@ app.put('/features/:name', (req: Request, res: Response, next: NextFunction) => 
 app.get('/games', (req: Request, res: Response, next: NextFunction) => {
     try {
         const game = getCurrentGame();
-        if (game.state.ongoing) {
+        if (game.isOngoing()) {
             res.send({ game });
         } else {
             res.send({ message: 'No game is currently running' });
@@ -141,7 +141,7 @@ app.get('/games', (req: Request, res: Response, next: NextFunction) => {
  */
 app.put('/games', (req: Request, res: Response, next: NextFunction) => {
     try {
-        const game = req.body as Game;
+        const game = new Game(req.body);
         const success = startGame(game);
 
         if (success) {
@@ -160,4 +160,5 @@ app.use(errorHandler);
 // Start the Express server
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
+    console.log(loadState() ? 'Successfully loaded State' : 'Failed to load State');
 });

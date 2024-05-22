@@ -1,21 +1,29 @@
 "use strict";
 // Features
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Pace = exports.GameName = exports.FeatureName = exports.TargetOption = exports.Mode = void 0;
+exports.Game = exports.Pace = exports.GameName = exports.FeatureName = exports.TargetOption = exports.Mode = void 0;
 var Mode;
 (function (Mode) {
-    Mode["funky"] = "Funky";
-    Mode["orchestra"] = "Orchestra";
-    Mode["beats"] = "Beats";
-    Mode["target"] = "Target";
-    Mode["brash"] = "Brash";
-    Mode["thump"] = "Thump";
-    Mode["musicBox"] = "Music Box";
-    Mode["path"] = "Path";
+    //flower
+    Mode["funky"] = "flower_gtr";
+    Mode["orchestra"] = "flower_orch";
+    Mode["beats"] = "flower_init";
+    Mode["target"] = "target_test";
+    Mode["brash"] = "bold_and_brash";
+    Mode["thump"] = "big_thump";
+    //stairs
+    Mode["guitar"] = "Guitar_Remix";
+    Mode["orchestraStairs"] = "orchestra_remix";
+    Mode["beatsStairs"] = "Funkybeats_Remix";
+    Mode["path"] = "Center_Pathway";
     Mode["space"] = "Space";
-    Mode["jungle"] = "Jungle";
-    Mode["farm"] = "Farm";
+    Mode["jungle"] = "animalsForest";
+    Mode["farm"] = "farm_animals";
     Mode["trains"] = "Trains";
+    //kalliroscope
+    Mode["musicBox"] = "Music Box";
+    //games
+    Mode["monster"] = "Monster";
 })(Mode || (exports.Mode = Mode = {}));
 var TargetOption;
 (function (TargetOption) {
@@ -25,12 +33,12 @@ var TargetOption;
 })(TargetOption || (exports.TargetOption = TargetOption = {}));
 var FeatureName;
 (function (FeatureName) {
-    FeatureName["flowerTrioLeft"] = "flowerTrioLeft";
-    FeatureName["flowerTrioRight"] = "flowerTrioRight";
-    FeatureName["flowerTrioMiddle"] = "flowerTrioMiddle";
-    FeatureName["flowerTopLeft"] = "flowerTopLeft";
-    FeatureName["flowerTopRight"] = "flowerTopRight";
-    FeatureName["flowerBottomLeft"] = "flowerBottomLeft";
+    FeatureName["flowerTrioLeft"] = "flowerC";
+    FeatureName["flowerTrioRight"] = "flowerD";
+    FeatureName["flowerTrioMiddle"] = "flowerE";
+    FeatureName["flowerWest"] = "flowerB";
+    FeatureName["flowerEast"] = "flowerA";
+    FeatureName["flowerSmall"] = "flowerF";
     FeatureName["kalliroscope"] = "kalliroscope";
     FeatureName["eastStairs"] = "eastStairs";
     FeatureName["westStairs"] = "westStairs";
@@ -49,3 +57,26 @@ var Pace;
     Pace["Medium"] = "Medium";
     Pace["Long"] = "Long";
 })(Pace || (exports.Pace = Pace = {}));
+class Game {
+    constructor(gameObject) {
+        this.setGame(gameObject);
+    }
+    setGame(gameObject) {
+        this.name = gameObject.name;
+        this.duration = gameObject.duration;
+        this.startTime = gameObject.startTime;
+        this.volume = gameObject.volume;
+        this.muted = gameObject.muted;
+        this.options = gameObject.options;
+    }
+    isOngoing() {
+        if (this.startTime && this.duration) {
+            return Date.now() < (this.startTime + this.duration);
+        }
+        return false;
+    }
+    static fromJSON(gameObject) {
+        return new Game(gameObject);
+    }
+}
+exports.Game = Game;
