@@ -19,8 +19,6 @@ export enum Mode {
     trains = 'Trains',
     //kalliroscope
     musicBox = 'Music Box',
-    //games
-    monster = 'Monster'
 }
 
 export enum TargetOption {
@@ -30,9 +28,9 @@ export enum TargetOption {
 }
 
 export type FeatureState = {
-    volume?: number,
-    muted?: boolean,
-    mode?: Mode,
+    volume: number,
+    muted: boolean,
+    mode: Mode | GameName,
     modeOption?: TargetOption
 }
 
