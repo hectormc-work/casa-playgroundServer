@@ -59,6 +59,7 @@ export type Feature = {
 export enum GameName {
     rlgl = 'Red Light, Green Light',
     monster = 'Baby Monsters',
+    space = 'Space'
 }
 
 export enum Pace {
@@ -69,34 +70,34 @@ export enum Pace {
 }
 
 export type RedLightGreenLightOptions = {
-    redPace?: Pace,
-    greenPace?: Pace,
-    eastFlower?: boolean,
-    westFlower?: boolean,
-    trioFlowers?: boolean,
-    smallFlower?: boolean,
+    redPace: Pace,
+    greenPace: Pace,
+    eastFlower: boolean,
+    westFlower: boolean,
+    trioFlowers: boolean,
+    smallFlower: boolean,
 }
 
 export type BabyMonstersOptions = {
-    numberOfMonsters?: number,
+    numberOfMonsters: number,
 }
 
-interface GameJSON {
-    name?: GameName;
-    duration?: number;
-    startTime?: number;
-    volume?: number;
-    muted?: boolean;
-    options?: RedLightGreenLightOptions | BabyMonstersOptions;
+export interface GameJSON {
+    name: GameName;
+    duration: number;
+    startTime: number;
+    volume: number;
+    muted: boolean;
+    options: RedLightGreenLightOptions | BabyMonstersOptions;
 }
 
 export class Game {
-    name?: GameName;
-    duration?: number;
-    startTime?: number;
-    volume?: number;
-    muted?: boolean;
-    options?: RedLightGreenLightOptions | BabyMonstersOptions;
+    name: GameName;
+    duration: number;
+    startTime: number;
+    volume: number;
+    muted: boolean;
+    options: RedLightGreenLightOptions | BabyMonstersOptions;
 
     constructor(gameObject: GameJSON) {
         this.name = gameObject.name;
