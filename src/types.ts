@@ -38,12 +38,12 @@ export enum FeatureName {
     flowerTrioLeft = 'flowerC',
     flowerTrioRight = 'flowerD',
     flowerTrioMiddle = 'flowerE',
-    flowerWest = 'flowerB',
-    flowerEast = 'flowerA',
+    flowerTopLeft = 'flowerB',
+    flowerTopRight = 'flowerA',
     flowerSmall = 'flowerF',
     kalliroscope = 'kalliroscope',
-    eastStairs = 'eastStairs',
-    westStairs = 'westStairs',
+    stairsEast = 'eastStairs',
+    stairsWest = 'westStairs',
     conductor = 'conductor',
 }
 
