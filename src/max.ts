@@ -67,6 +67,9 @@ export function startGame(game: Game) {
 }
 
 export function updateGame(game: Game) {
+    if (currentGame) {
+        game.startTime = currentGame.startTime
+    }
     currentGame = game;
     // When updating, ignore startTime
     saveState()
