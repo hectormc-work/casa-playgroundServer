@@ -4,7 +4,7 @@ import * as fs from 'fs';
 // Storing game State here to be sent out
 const filePath = 'state.json';
 let features = {} as {[featureName: string]: FeatureState};
-let currentGame: Game = new Game({
+let currentGame: Game | null = new Game({
     name: GameName.rlgl,
     duration: 10,
     startTime: Date.now(),
@@ -62,6 +62,25 @@ export function getCurrentGame() {
 
 export function startGame(game: Game) {
     currentGame = game
+    saveState()
+    return true
+}
+
+export function updateGame(game: Game) {
+    currentGame = game;
+    saveState()
+    return true
+}
+
+export function stopGame() {
+    currentGame = null
+    saveState()
+    return true
+}
+
+export function resetFeatures() {
+    features = {}
+    currentGame = null
     saveState()
     return true
 }
