@@ -78,7 +78,7 @@ export function stopGame() {
     return true
 }
 
-export function resetFeatures() {
+export function reset() {
     features = {}
     currentGame = null
     saveState()

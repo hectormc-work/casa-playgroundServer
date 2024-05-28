@@ -123,16 +123,16 @@ app.get('/games', (req, res, next) => {
 /**
  * Start a global game
  *
- * @name PUT /games/
+ * @name POST /games/
  *
  * @param {string} gameName - Name of the game
- * @param {RedLightGreenLightState} body - The settings for the game
+ * @param {GameJSON} body
  * @return {object} - Success message with game name and settings
  *
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-app.put('/games', (req, res, next) => {
+app.post('/games', (req, res, next) => {
     try {
         const game = new types_1.Game(req.body);
         const success = (0, max_1.startGame)(game);
@@ -141,6 +141,81 @@ app.put('/games', (req, res, next) => {
         }
         else {
             res.status(400).send({ message: 'Game could not be started' });
+        }
+    }
+    catch (error) {
+        next(error);
+    }
+});
+/**
+ * Modify an Ongoing Game
+ *
+ * @name PUT /games/
+ *
+ * @param {string} gameName - Name of the game
+ * @param {GameJSON} body
+ * @return {object} - Success message with game name and settings
+ *
+ * @throws {400} - Bad request if validation fails
+ * @throws {500} - Server error
+ */
+app.put('/games', (req, res, next) => {
+    try {
+        const game = new types_1.Game(req.body);
+        const success = (0, max_1.updateGame)(game);
+        if (success) {
+            res.status(202).send({ message: 'Game modified', game });
+        }
+        else {
+            res.status(400).send({ message: 'Game could not be changed' });
+        }
+    }
+    catch (error) {
+        next(error);
+    }
+});
+/**
+ * Stop the ongoing Game
+ *
+ * @name DELETE /games/
+ *
+ * @return {object} - Success message with game name and settings
+ *
+ * @throws {400} - Bad request if validation fails
+ * @throws {500} - Server error
+ */
+app.delete('/games', (req, res, next) => {
+    try {
+        const success = (0, max_1.stopGame)();
+        if (success) {
+            res.status(202).send({ message: 'Game modified' });
+        }
+        else {
+            res.status(400).send({ message: 'Game could not be changed' });
+        }
+    }
+    catch (error) {
+        next(error);
+    }
+});
+/**
+ * Reset Features
+ *
+ * @name DELETE /features/
+ *
+ * @return {object} - Success message with game name and settings
+ *
+ * @throws {400} - Bad request if validation fails
+ * @throws {500} - Server error
+ */
+app.delete('/features', (req, res, next) => {
+    try {
+        const success = (0, max_1.reset)();
+        if (success) {
+            res.status(202).send({ message: 'Reset all features' });
+        }
+        else {
+            res.status(400).send({ message: 'Features could not be reset' });
         }
     }
     catch (error) {

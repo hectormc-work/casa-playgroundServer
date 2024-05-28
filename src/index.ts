@@ -5,7 +5,7 @@ import {
     getAllFeatures,
     getCurrentGame,
     getFeatureState,
-    loadState, resetFeatures,
+    loadState, reset,
     startGame,
     stopGame,
     updateGame
@@ -222,7 +222,7 @@ app.delete('/games', (req: Request, res: Response, next: NextFunction) => {
  */
 app.delete('/features', (req: Request, res: Response, next: NextFunction) => {
     try {
-        const success = resetFeatures();
+        const success = reset();
 
         if (success) {
             res.status(202).send({ message: 'Reset all features' });

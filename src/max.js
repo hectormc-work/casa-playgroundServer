@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.startGame = exports.getCurrentGame = exports.changeFeature = exports.getAllFeatures = exports.getFeatureState = exports.loadState = exports.saveState = void 0;
+exports.reset = exports.stopGame = exports.updateGame = exports.startGame = exports.getCurrentGame = exports.changeFeature = exports.getAllFeatures = exports.getFeatureState = exports.loadState = exports.saveState = void 0;
 const types_1 = require("./types");
 const fs = __importStar(require("fs"));
 // Storing game State here to be sent out
@@ -85,3 +85,22 @@ function startGame(game) {
     return true;
 }
 exports.startGame = startGame;
+function updateGame(game) {
+    currentGame = game;
+    saveState();
+    return true;
+}
+exports.updateGame = updateGame;
+function stopGame() {
+    currentGame = null;
+    saveState();
+    return true;
+}
+exports.stopGame = stopGame;
+function reset() {
+    features = {};
+    currentGame = null;
+    saveState();
+    return true;
+}
+exports.reset = reset;

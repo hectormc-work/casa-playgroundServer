@@ -22,8 +22,6 @@ var Mode;
     Mode["trains"] = "Trains";
     //kalliroscope
     Mode["musicBox"] = "Music Box";
-    //games
-    Mode["monster"] = "Monster";
 })(Mode || (exports.Mode = Mode = {}));
 var TargetOption;
 (function (TargetOption) {
@@ -36,12 +34,12 @@ var FeatureName;
     FeatureName["flowerTrioLeft"] = "flowerC";
     FeatureName["flowerTrioRight"] = "flowerD";
     FeatureName["flowerTrioMiddle"] = "flowerE";
-    FeatureName["flowerWest"] = "flowerB";
-    FeatureName["flowerEast"] = "flowerA";
+    FeatureName["flowerTopLeft"] = "flowerB";
+    FeatureName["flowerTopRight"] = "flowerA";
     FeatureName["flowerSmall"] = "flowerF";
     FeatureName["kalliroscope"] = "kalliroscope";
-    FeatureName["eastStairs"] = "eastStairs";
-    FeatureName["westStairs"] = "westStairs";
+    FeatureName["stairsEast"] = "eastStairs";
+    FeatureName["stairsWest"] = "westStairs";
     FeatureName["conductor"] = "conductor";
 })(FeatureName || (exports.FeatureName = FeatureName = {}));
 // Games
@@ -49,6 +47,7 @@ var GameName;
 (function (GameName) {
     GameName["rlgl"] = "Red Light, Green Light";
     GameName["monster"] = "Baby Monsters";
+    GameName["space"] = "Space";
 })(GameName || (exports.GameName = GameName = {}));
 var Pace;
 (function (Pace) {
