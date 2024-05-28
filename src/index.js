@@ -117,7 +117,7 @@ app.get('/games', (req, res, next) => {
         res.send({ message: 'Got CurrentGame', game });
     }
     catch (error) {
-        next(error);
+        res.status(400).send({ message: 'Could not get current Game', error });
     }
 });
 /**
@@ -134,17 +134,12 @@ app.get('/games', (req, res, next) => {
  */
 app.post('/games', (req, res, next) => {
     try {
-        const game = new types_1.Game(req.body);
-        const success = (0, max_1.startGame)(game);
-        if (success) {
-            res.status(200).send({ message: 'Game started', game });
-        }
-        else {
-            res.status(400).send({ message: 'Game could not be started' });
-        }
+        const requestGame = new types_1.Game(req.body);
+        const game = (0, max_1.startGame)(requestGame);
+        res.status(200).send({ message: 'Game started', game });
     }
     catch (error) {
-        next(error);
+        res.status(400).send({ message: 'Game could not be started', error });
     }
 });
 /**
@@ -161,17 +156,12 @@ app.post('/games', (req, res, next) => {
  */
 app.put('/games', (req, res, next) => {
     try {
-        const game = new types_1.Game(req.body);
-        const success = (0, max_1.updateGame)(game);
-        if (success) {
-            res.status(202).send({ message: 'Game modified', game });
-        }
-        else {
-            res.status(400).send({ message: 'Game could not be changed' });
-        }
+        const requestGame = new types_1.Game(req.body);
+        const game = (0, max_1.updateGame)(requestGame);
+        res.status(202).send({ message: 'Game modified', game });
     }
     catch (error) {
-        next(error);
+        res.status(400).send({ message: 'Game could not be changed', error });
     }
 });
 /**
@@ -186,16 +176,11 @@ app.put('/games', (req, res, next) => {
  */
 app.delete('/games', (req, res, next) => {
     try {
-        const success = (0, max_1.stopGame)();
-        if (success) {
-            res.status(202).send({ message: 'Game modified' });
-        }
-        else {
-            res.status(400).send({ message: 'Game could not be changed' });
-        }
+        const game = (0, max_1.stopGame)();
+        res.status(202).send({ message: 'Game modified', game });
     }
     catch (error) {
-        next(error);
+        res.status(400).send({ message: 'Game could not be changed', error });
     }
 });
 /**
@@ -210,16 +195,11 @@ app.delete('/games', (req, res, next) => {
  */
 app.delete('/features', (req, res, next) => {
     try {
-        const success = (0, max_1.reset)();
-        if (success) {
-            res.status(202).send({ message: 'Reset all features' });
-        }
-        else {
-            res.status(400).send({ message: 'Features could not be reset' });
-        }
+        const features = (0, max_1.reset)();
+        res.status(202).send({ message: 'Reset all features', features });
     }
     catch (error) {
-        next(error);
+        res.status(400).send({ message: 'Features could not be reset', error });
     }
 });
 // Error handling middleware should be the last middleware

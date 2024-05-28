@@ -128,7 +128,7 @@ app.get('/games', (req: Request, res: Response, next: NextFunction) => {
         const game = getCurrentGame();
         res.send({ message: 'Got CurrentGame', game });
     } catch (error) {
-        next(error);
+        res.status(400).send({ message: 'Could not get current Game', error });
     }
 });
 
@@ -146,16 +146,12 @@ app.get('/games', (req: Request, res: Response, next: NextFunction) => {
  */
 app.post('/games', (req: Request, res: Response, next: NextFunction) => {
     try {
-        const game = new Game(req.body);
-        const success = startGame(game);
+        const requestGame = new Game(req.body);
+        const game = startGame(requestGame);
 
-        if (success) {
-            res.status(200).send({ message: 'Game started', game });
-        } else {
-            res.status(400).send({ message: 'Game could not be started' });
-        }
+        res.status(200).send({ message: 'Game started', game });
     } catch (error) {
-        next(error);
+        res.status(400).send({ message: 'Game could not be started', error });
     }
 });
 
@@ -173,16 +169,12 @@ app.post('/games', (req: Request, res: Response, next: NextFunction) => {
  */
 app.put('/games', (req: Request, res: Response, next: NextFunction) => {
     try {
-        const game = new Game(req.body);
-        const success = updateGame(game);
+        const requestGame = new Game(req.body);
+        const game = updateGame(requestGame);
 
-        if (success) {
-            res.status(202).send({ message: 'Game modified', game });
-        } else {
-            res.status(400).send({ message: 'Game could not be changed' });
-        }
+        res.status(202).send({ message: 'Game modified', game });
     } catch (error) {
-        next(error);
+        res.status(400).send({ message: 'Game could not be changed', error });
     }
 });
 
@@ -198,15 +190,10 @@ app.put('/games', (req: Request, res: Response, next: NextFunction) => {
  */
 app.delete('/games', (req: Request, res: Response, next: NextFunction) => {
     try {
-        const success = stopGame();
-
-        if (success) {
-            res.status(202).send({ message: 'Game modified' });
-        } else {
-            res.status(400).send({ message: 'Game could not be changed' });
-        }
+        const game = stopGame();
+        res.status(202).send({ message: 'Game modified', game });
     } catch (error) {
-        next(error);
+        res.status(400).send({ message: 'Game could not be changed', error });
     }
 });
 
@@ -222,15 +209,11 @@ app.delete('/games', (req: Request, res: Response, next: NextFunction) => {
  */
 app.delete('/features', (req: Request, res: Response, next: NextFunction) => {
     try {
-        const success = reset();
+        const features = reset();
 
-        if (success) {
-            res.status(202).send({ message: 'Reset all features' });
-        } else {
-            res.status(400).send({ message: 'Features could not be reset' });
-        }
+        res.status(202).send({ message: 'Reset all features', features });
     } catch (error) {
-        next(error);
+        res.status(400).send({ message: 'Features could not be reset', error });
     }
 });
 

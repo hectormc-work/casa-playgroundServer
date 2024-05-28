@@ -63,24 +63,25 @@ export function getCurrentGame() {
 export function startGame(game: Game) {
     currentGame = game
     saveState()
-    return true
+    return currentGame
 }
 
 export function updateGame(game: Game) {
     currentGame = game;
+    // When updating, ignore startTime
     saveState()
-    return true
+    return currentGame
 }
 
 export function stopGame() {
     currentGame = null
     saveState()
-    return true
+    return currentGame
 }
 
 export function reset() {
     features = {}
     currentGame = null
     saveState()
-    return true
+    return features
 }
