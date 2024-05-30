@@ -1,5 +1,7 @@
-import express, {NextFunction, Request, Response} from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
+import http from 'http';
+import { Server } from 'ws';
 import {
     changeFeature,
     getAllFeatures,
@@ -10,7 +12,7 @@ import {
     stopGame,
     updateGame
 } from "./max";
-import {Feature, FeatureName, FeatureState, Game} from './types';
+import { Feature, FeatureName, FeatureState, Game } from './types';
 
 const app = express();
 const port = 8080;
@@ -220,8 +222,32 @@ app.delete('/features', (req: Request, res: Response, next: NextFunction) => {
 // Error handling middleware should be the last middleware
 app.use(errorHandler);
 
-// Start the Express server
-app.listen(port, () => {
+const server = http.createServer(app);
+const wss = new Server({ server });
+
+wss.on('connection', (ws) => {
+    console.log('Client connected');
+
+    ws.on('message', (message) => {
+        console.log('Received:', message);
+        // Handle received message and broadcast updates
+    });
+
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
+
+    // Example function to send updates to the client
+    function sendUpdate(update: any) {
+        ws.send(JSON.stringify(update));
+    }
+
+    // Call sendUpdate whenever there's an update to broadcast
+    // For example, after a feature state changes:
+    // sendUpdate({ type: 'feature-update', data: updatedFeature });
+});
+
+server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
     console.log(loadState() ? 'Successfully loaded State' : 'Failed to load State');
 });
