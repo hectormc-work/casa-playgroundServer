@@ -55,7 +55,7 @@ class CasaState {
         this.saveState();
     }
     getFeatures() {
-        return this.features;
+        return Object.keys(this.features).map(name => { return { name, state: this.features[name] }; });
     }
     getFeatureState(featureName) {
         return this.features[featureName];

@@ -7,6 +7,8 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const types_1 = require("./types");
 const casaHandler_1 = require("./casaHandler");
+const http_1 = __importDefault(require("http"));
+const ws_1 = require("ws");
 const app = (0, express_1.default)();
 const port = 8080;
 app.use((0, cors_1.default)());
@@ -16,6 +18,25 @@ function errorHandler(err, req, res, next) {
     console.error(err.stack);
     res.status(500).send({ error: 'Something went wrong!' });
 }
+// WebSocket setup
+const server = http_1.default.createServer(app);
+const wss = new ws_1.WebSocketServer({ server });
+function broadcast(data) {
+    wss.clients.forEach(client => {
+        if (client.readyState === ws_1.WebSocket.OPEN) {
+            client.send(JSON.stringify(data));
+        }
+    });
+}
+wss.on('connection', (ws) => {
+    console.log('Client connected');
+    ws.on('message', (message) => {
+        console.log(`Received message => ${message}`);
+    });
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
+});
 /**
  * Sends a 'Hello, world' message.
  *
@@ -29,6 +50,29 @@ app.get('/', (req, res) => {
     res.send('Hello, world! Is this going through?');
 });
 /**
+ * Reset Everything
+ *
+ * @name DELETE /
+ *
+ * @return {object} - Success message with game name and settings
+ *
+ * @throws {400} - Bad request if validation fails
+ * @throws {500} - Server error
+ */
+app.delete('/', (req, res, next) => {
+    try {
+        (0, casaHandler_1.resetComputer)();
+        const features = (0, casaHandler_1.getFeatures)();
+        const game = (0, casaHandler_1.getGame)();
+        const message = { message: 'Reset all features', features, game };
+        res.status(202).send(message);
+        broadcast(message);
+    }
+    catch (error) {
+        res.status(400).send({ message: 'Features could not be reset', error });
+    }
+});
+/**
  * Get the state of ALL features in body
  *
  * @name GET /features
@@ -40,7 +84,7 @@ app.get('/', (req, res) => {
 app.get('/features', (req, res, next) => {
     try {
         const features = (0, casaHandler_1.getFeatures)();
-        res.status(200).send({ message: 'Retrieved all Features', features: features });
+        res.status(200).send({ message: 'Retrieved all Features', features });
     }
     catch (error) {
         next(error);
@@ -92,7 +136,9 @@ app.put('/features/:name', (req, res, next) => {
         const feature = { name, state };
         const success = (0, casaHandler_1.setFeature)(name, state);
         if (success) {
-            res.status(200).send({ message: 'Changed Feature', feature });
+            const message = { message: 'Changed Feature', feature };
+            res.status(200).send(message);
+            broadcast(message);
         }
         else {
             res.status(400).send({ message: 'Could not Change Feature', feature });
@@ -136,7 +182,10 @@ app.post('/games', (req, res, next) => {
     try {
         const requestGame = new types_1.Game(req.body);
         const game = (0, casaHandler_1.setGame)(requestGame);
-        res.status(200).send({ message: 'Game started', game });
+        const features = (0, casaHandler_1.getFeatures)();
+        const message = { message: 'Game started', game, features };
+        res.status(200).send(message);
+        broadcast(message);
     }
     catch (error) {
         res.status(400).send({ message: 'Game could not be started', error });
@@ -158,7 +207,10 @@ app.put('/games', (req, res, next) => {
     try {
         const requestGame = new types_1.Game(req.body);
         const game = (0, casaHandler_1.updateGame)(requestGame);
-        res.status(202).send({ message: 'Game modified', game });
+        const features = (0, casaHandler_1.getFeatures)();
+        const message = { message: 'Game modified', game, features };
+        res.status(202).send(message);
+        broadcast(message);
     }
     catch (error) {
         res.status(400).send({ message: 'Game could not be changed', error });
@@ -177,34 +229,18 @@ app.put('/games', (req, res, next) => {
 app.delete('/games', (req, res, next) => {
     try {
         const game = (0, casaHandler_1.stopGame)();
-        res.status(202).send({ message: 'Game Stopped', game });
+        const features = (0, casaHandler_1.getFeatures)();
+        const message = { message: 'Game Stopped', game, features };
+        res.status(202).send(message);
+        broadcast(message);
     }
     catch (error) {
         res.status(400).send({ message: 'Game unable to be stopped', error });
     }
 });
-/**
- * Reset Features
- *
- * @name DELETE /features/
- *
- * @return {object} - Success message with game name and settings
- *
- * @throws {400} - Bad request if validation fails
- * @throws {500} - Server error
- */
-app.delete('/features', (req, res, next) => {
-    try {
-        const features = (0, casaHandler_1.resetComputer)();
-        res.status(202).send({ message: 'Reset all features', features });
-    }
-    catch (error) {
-        res.status(400).send({ message: 'Features could not be reset', error });
-    }
-});
 // Error handling middleware should be the last middleware
 app.use(errorHandler);
 // Start the Express server
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });

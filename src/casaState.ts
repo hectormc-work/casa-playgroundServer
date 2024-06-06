@@ -1,5 +1,5 @@
 import fs from "fs";
-import { FeatureState, Game, GameName, Pace, RedLightGreenLightOptions } from "./types";
+import {Feature, FeatureState, Game, GameName, Pace, RedLightGreenLightOptions} from "./types";
 
 export default class CasaState {
     private static instance: CasaState; // There will only ever be one of these State classes
@@ -65,7 +65,7 @@ export default class CasaState {
     }
 
     public getFeatures() {
-        return this.features;
+        return Object.keys(this.features).map(name => {return {name, state: this.features[name]} as Feature});
     }
 
     public getFeatureState(featureName: string): FeatureState | null {
