@@ -177,10 +177,10 @@ app.put('/games', (req, res, next) => {
 app.delete('/games', (req, res, next) => {
     try {
         const game = (0, casaHandler_1.stopGame)();
-        res.status(202).send({ message: 'Game modified', game });
+        res.status(202).send({ message: 'Game Stopped', game });
     }
     catch (error) {
-        res.status(400).send({ message: 'Game could not be changed', error });
+        res.status(400).send({ message: 'Game unable to be stopped', error });
     }
 });
 /**

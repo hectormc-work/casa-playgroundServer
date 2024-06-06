@@ -1,0 +1,55 @@
+{
+  "features": {
+    "flowerE": {
+      "volume": 70,
+      "muted": false,
+      "mode": "flower_gtr"
+    },
+    "flowerD": {
+      "volume": 70,
+      "muted": false,
+      "mode": "flower_orch"
+    },
+    "flowerC": {
+      "volume": 70,
+      "muted": false,
+      "mode": "big_thump"
+    },
+    "flowerA": {
+      "volume": 70,
+      "muted": false,
+      "mode": "flower_gtr"
+    },
+    "flowerF": {
+      "volume": 70,
+      "muted": false,
+      "mode": "big_thump"
+    },
+    "eastStairs": {
+      "volume": 30,
+      "muted": false,
+      "mode": "flower_gtr"
+    },
+    "westStairs": {
+      "volume": 70,
+      "muted": false,
+      "mode": "animalsForest"
+    },
+    "conductor": {
+      "volume": 70,
+      "muted": false,
+      "mode": "big_thump"
+    },
+    "flowerB": {
+      "volume": 30,
+      "muted": false,
+      "mode": "bold_and_brash"
+    },
+    "kalliroscope": {
+      "volume": 70,
+      "muted": false,
+      "mode": "Music Box"
+    }
+  },
+  "currentGame": null
+}

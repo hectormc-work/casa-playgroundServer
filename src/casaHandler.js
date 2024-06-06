@@ -39,7 +39,7 @@ exports.setFeature = setFeature;
 function setGame(game) {
     // startGame(game)
     casaState.setGame(game);
-    return true;
+    return casaState.getGame();
 }
 exports.setGame = setGame;
 /*********************************************

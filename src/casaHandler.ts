@@ -39,7 +39,7 @@ export function setFeature(featureName: FeatureName, state: FeatureState) {
 export function setGame(game: Game) {
     // startGame(game)
     casaState.setGame(game)
-    return true
+    return casaState.getGame()
 }
 
 /*********************************************
