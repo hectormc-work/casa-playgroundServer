@@ -8,6 +8,11 @@ export enum Mode {
     target = 'target_test',
     brash = 'bold_and_brash',
     thump = 'big_thump',
+    rlgl = 'red_green',
+    //conductor pads
+    thumpPad = 'thump_pads',
+    // flower and conductor
+    monster = 'monster',
     //stairs
     guitar = 'Guitar_Remix',
     orchestraStairs = 'orchestra_remix',
@@ -30,21 +35,21 @@ export enum TargetOption {
 export type FeatureState = {
     volume: number,
     muted: boolean,
-    mode: Mode | GameName,
+    mode: Mode,
     modeOption?: TargetOption
 }
 
 export enum FeatureName {
     flowerTrioLeft = 'flowerC',
-    flowerTrioRight = 'flowerD',
-    flowerTrioMiddle = 'flowerE',
+    flowerTrioRight = 'flowerE',
+    flowerTrioMiddle = 'flowerD',
     flowerTopLeft = 'flowerB',
     flowerTopRight = 'flowerA',
     flowerSmall = 'flowerF',
     kalliroscope = 'kalliroscope',
-    stairsEast = 'eastStairs',
-    stairsWest = 'westStairs',
-    conductor = 'conductor',
+    stairsEast = 'stairsA',
+    stairsWest = 'stairsB',
+    conductor = 'pads',
 }
 
 export type Feature = {
@@ -58,6 +63,11 @@ export enum GameName {
     rlgl = 'Red Light, Green Light',
     monster = 'Baby Monsters',
     space = 'Space'
+}
+
+export enum RLGLColors {
+    red = 'red',
+    green = 'green'
 }
 
 export enum Pace {
@@ -77,7 +87,8 @@ export type RedLightGreenLightOptions = {
 }
 
 export type BabyMonstersOptions = {
-    numberOfMonsters: number,
+    hiddenMonsters: number,
+    carryingCapacity: number
 }
 
 export interface GameJSON {
@@ -98,12 +109,22 @@ export class Game {
     options: RedLightGreenLightOptions | BabyMonstersOptions;
 
     constructor(gameObject: GameJSON) {
+        this.validateGameObject(gameObject);
+
         this.name = gameObject.name;
         this.duration = gameObject.duration;
         this.startTime = gameObject.startTime;
         this.volume = gameObject.volume;
         this.muted = gameObject.muted;
         this.options = gameObject.options;
+    }
+
+    validateGameObject(gameObject: GameJSON) {
+        for (const [key, value] of Object.entries(gameObject)) {
+            if (value === null || value === undefined) {
+                throw new Error(`The field ${key} is required and cannot be empty.`);
+            }
+        }
     }
 
     isOngoing() {

@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
     "serve": "nodemon",
-    "serve-js": "node src/index.js",
+    "serve-js": "node src/casaServer.js",
     "web": "ngrok http --domain=playground-server.ngrok.app 8080",
     "web-dev": "ngrok http --domain=supposedly-strong-pheasant.ngrok-free.app 8080"
   },
