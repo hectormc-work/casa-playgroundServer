@@ -228,8 +228,10 @@ app.post('/games', (req: Request, res: Response, next: NextFunction) => {
 app.put('/games', (req: Request, res: Response, next: NextFunction) => {
     try {
         const requestGame = new Game(req.body);
-        const game = updateGame(requestGame);
+        updateGame(requestGame);
+
         const features = getFeatures()
+        const game = getGame()
 
         const message = { message: 'Game modified', game, features }
 
