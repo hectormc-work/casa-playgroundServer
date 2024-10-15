@@ -23,7 +23,12 @@ export enum Mode {
     farm = 'farm_animals',
     trains = 'Trains',
     //kalliroscope
-    musicBox = 'Music Box',
+    musicBox = 'MusicBox',
+    //pebbles
+    pebblesFunky = 'funky',
+    pebblesHipHop = 'hiphop',
+    pebblesTrain = 'train',
+    pebblesOrchestra = 'orch'
 }
 
 export enum TargetOption {
@@ -36,7 +41,8 @@ export type FeatureState = {
     volume: number,
     muted: boolean,
     mode: Mode,
-    modeOption?: TargetOption
+    modeOption?: TargetOption | number,
+    enabled?: boolean
 }
 
 export enum FeatureName {
@@ -50,6 +56,7 @@ export enum FeatureName {
     stairsEast = 'stairsA',
     stairsWest = 'stairsB',
     conductor = 'pads',
+    pebbles = 'pebbles'
 }
 
 export type Feature = {
@@ -132,5 +139,29 @@ export class Game {
             return Date.now() < (this.startTime + this.duration);
         }
         return false;
+    }
+
+    participatingFeatures(){
+        const features = [] as Array<FeatureName>
+        if (!this.isOngoing()) {
+            return features
+        }
+
+        if (this.name === GameName.rlgl) {
+            const options = this.options as RedLightGreenLightOptions
+            if (options.eastFlower) { features.push(FeatureName.flowerTopLeft) }
+            if (options.westFlower) { features.push(FeatureName.flowerTopRight) }
+            if (options.smallFlower) { features.push(FeatureName.flowerSmall) }
+            if (options.trioFlowers) {
+                features.push(FeatureName.flowerTrioLeft)
+                features.push(FeatureName.flowerTrioMiddle)
+                features.push(FeatureName.flowerTrioRight)
+            }
+        } else if (this.name === GameName.monster) {
+            const options = this.options as BabyMonstersOptions
+            features.push(FeatureName.kalliroscope)
+        }
+
+        return features
     }
 }

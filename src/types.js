@@ -26,7 +26,12 @@ var Mode;
     Mode["farm"] = "farm_animals";
     Mode["trains"] = "Trains";
     //kalliroscope
-    Mode["musicBox"] = "Music Box";
+    Mode["musicBox"] = "MusicBox";
+    //pebbles
+    Mode["pebblesFunky"] = "funky";
+    Mode["pebblesHipHop"] = "hiphop";
+    Mode["pebblesTrain"] = "train";
+    Mode["pebblesOrchestra"] = "orch";
 })(Mode || (exports.Mode = Mode = {}));
 var TargetOption;
 (function (TargetOption) {
@@ -46,6 +51,7 @@ var FeatureName;
     FeatureName["stairsEast"] = "stairsA";
     FeatureName["stairsWest"] = "stairsB";
     FeatureName["conductor"] = "pads";
+    FeatureName["pebbles"] = "pebbles";
 })(FeatureName || (exports.FeatureName = FeatureName = {}));
 // Games
 var GameName;
@@ -88,6 +94,34 @@ class Game {
             return Date.now() < (this.startTime + this.duration);
         }
         return false;
+    }
+    participatingFeatures() {
+        const features = [];
+        if (!this.isOngoing()) {
+            return features;
+        }
+        if (this.name === GameName.rlgl) {
+            const options = this.options;
+            if (options.eastFlower) {
+                features.push(FeatureName.flowerTopLeft);
+            }
+            if (options.westFlower) {
+                features.push(FeatureName.flowerTopRight);
+            }
+            if (options.smallFlower) {
+                features.push(FeatureName.flowerSmall);
+            }
+            if (options.trioFlowers) {
+                features.push(FeatureName.flowerTrioLeft);
+                features.push(FeatureName.flowerTrioMiddle);
+                features.push(FeatureName.flowerTrioRight);
+            }
+        }
+        else if (this.name === GameName.monster) {
+            const options = this.options;
+            features.push(FeatureName.kalliroscope);
+        }
+        return features;
     }
 }
 exports.Game = Game;

@@ -206,8 +206,9 @@ app.post('/games', (req, res, next) => {
 app.put('/games', (req, res, next) => {
     try {
         const requestGame = new types_1.Game(req.body);
-        const game = (0, casaHandler_1.updateGame)(requestGame);
+        (0, casaHandler_1.updateGame)(requestGame);
         const features = (0, casaHandler_1.getFeatures)();
+        const game = (0, casaHandler_1.getGame)();
         const message = { message: 'Game modified', game, features };
         res.status(202).send(message);
         broadcast(message);
