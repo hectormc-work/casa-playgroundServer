@@ -57,6 +57,11 @@ export function updateGame(game: Game) {
     return currentGame
 }
 
+export function lastRound() {
+    const game = casaState.getGame()
+    // maxSetLastRound(game.name)
+}
+
 /*********************************************
  * End / Reset
  **********************************************/

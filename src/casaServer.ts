@@ -4,7 +4,7 @@ import { Feature, FeatureName, FeatureState, Game } from './types';
 import {
     getFeatures,
     getFeatureState,
-    getGame,
+    getGame, lastRound,
     resetComputer,
     setFeature,
     setGame,
@@ -229,6 +229,34 @@ app.put('/games', (req: Request, res: Response, next: NextFunction) => {
     try {
         const requestGame = new Game(req.body);
         updateGame(requestGame);
+
+        const features = getFeatures()
+        const game = getGame()
+
+        const message = { message: 'Game modified', game, features }
+
+        res.status(202).send(message);
+        broadcast(message);
+    } catch (error) {
+        res.status(400).send({ message: 'Game could not be changed', error });
+    }
+});
+
+/**
+ * Set Ongoing Game to Last Round
+ *
+ * @name PATCH /games/
+ *
+ * @param {string} gameName - Name of the game
+ * @param {GameJSON} body
+ * @return {object} - Success message with game name and settings
+ *
+ * @throws {400} - Bad request if validation fails
+ * @throws {500} - Server error
+ */
+app.patch('/games', (req: Request, res: Response, next: NextFunction) => {
+    try {
+        lastRound();
 
         const features = getFeatures()
         const game = getGame()

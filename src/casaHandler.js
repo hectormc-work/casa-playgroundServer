@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetComputer = exports.stopGame = exports.updateGame = exports.setGame = exports.setFeature = exports.getGame = exports.getFeatures = exports.getFeatureState = void 0;
+exports.resetComputer = exports.stopGame = exports.lastRound = exports.updateGame = exports.setGame = exports.setFeature = exports.getGame = exports.getFeatures = exports.getFeatureState = void 0;
 const casaState_1 = __importDefault(require("./casaState"));
 const casaState = casaState_1.default.getInstance();
 /*********************************************
@@ -55,6 +55,11 @@ function updateGame(game) {
     return currentGame;
 }
 exports.updateGame = updateGame;
+function lastRound() {
+    const game = casaState.getGame();
+    // maxSetLastRound(game.name)
+}
+exports.lastRound = lastRound;
 /*********************************************
  * End / Reset
  **********************************************/

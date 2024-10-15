@@ -218,6 +218,31 @@ app.put('/games', (req, res, next) => {
     }
 });
 /**
+ * Set Ongoing Game to Last Round
+ *
+ * @name PATCH /games/
+ *
+ * @param {string} gameName - Name of the game
+ * @param {GameJSON} body
+ * @return {object} - Success message with game name and settings
+ *
+ * @throws {400} - Bad request if validation fails
+ * @throws {500} - Server error
+ */
+app.patch('/games', (req, res, next) => {
+    try {
+        (0, casaHandler_1.lastRound)();
+        const features = (0, casaHandler_1.getFeatures)();
+        const game = (0, casaHandler_1.getGame)();
+        const message = { message: 'Game modified', game, features };
+        res.status(202).send(message);
+        broadcast(message);
+    }
+    catch (error) {
+        res.status(400).send({ message: 'Game could not be changed', error });
+    }
+});
+/**
  * Stop the ongoing Game
  *
  * @name DELETE /games/
