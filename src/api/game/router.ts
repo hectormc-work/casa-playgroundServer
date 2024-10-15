@@ -1,7 +1,7 @@
 import express, {NextFunction, Request, Response} from "express";
-import {getFeatures, getGame, setGame, stopGame, updateGame} from "../casaHandler";
-import {Game} from "../types";
-import {broadcast} from "../casaServer";
+import {getFeatures, getGame, setGame, stopGame, updateGame} from "../../casaHandler";
+import {Game} from "../../types";
+import {broadcast} from "../../casaServer";
 
 const router = express.Router();
 

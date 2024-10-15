@@ -1,5 +1,4 @@
-import type {Request, Response, NextFunction} from 'express';import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import type {Request, Response, NextFunction} from 'express';
 import UserCollection from "./collection";
 
 const doesCurrentSessionUserExists = async (req: Request, res: Response, next: NextFunction) => {
@@ -20,3 +19,6 @@ const doesCurrentSessionUserExists = async (req: Request, res: Response, next: N
     next();
 };
 
+export {
+    doesCurrentSessionUserExists,
+}

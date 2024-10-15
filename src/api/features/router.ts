@@ -1,7 +1,7 @@
 import express, {NextFunction, Request, Response} from "express";
-import {getFeatures, getFeatureState, setFeature} from "../casaHandler";
-import {Feature, FeatureName, FeatureState} from "../types";
-import {broadcast} from "../casaServer";
+import {getFeatures, getFeatureState, setFeature} from "../../casaHandler";
+import {Feature, FeatureName, FeatureState} from "../../types";
+import {broadcast} from "../../casaServer";
 
 const router = express.Router();
 

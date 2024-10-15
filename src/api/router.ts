@@ -1,6 +1,9 @@
 import express, {NextFunction, Request, Response} from "express";
 import {getFeatures, getGame, resetComputer} from "../casaHandler";
 import {broadcast} from "../casaServer";
+import {usersRouter} from "./users/router";
+import {gameRouter} from "./game/router";
+import {featuresRouter} from "./features/router";
 
 const router = express.Router();
 
@@ -44,4 +47,8 @@ router.delete('/', (req: Request, res: Response, next: NextFunction) => {
     }
 });
 
-export { router as rootRouter}
+router.use('/users', usersRouter);
+router.use('/game', gameRouter);
+router.use('/features', featuresRouter);
+
+export { router as apiRouter}

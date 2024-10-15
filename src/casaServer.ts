@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
+import session from 'express-session';
 import cors from 'cors';
 import { Feature, FeatureName, FeatureState, Game } from './types';
 import {
@@ -13,6 +14,9 @@ import {
 } from "./casaHandler";
 import http from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
+import { apiRouter } from "./api/router";
+import * as usersValidator from 'api/users/middleware';
+
 
 const app = express();
 const port = 8080;
@@ -26,17 +30,32 @@ function errorHandler(err: Error, req: Request, res: Response, next: NextFunctio
     res.status(500).send({ error: 'Something went wrong!' });
 }
 
-// WebSocket setup
-const server = http.createServer(app);
-const wss = new WebSocketServer({ server });
+// Initialize cookie session
+app.use(session({
+    secret: 'HeathInteractive',
+    resave: true,
+    saveUninitialized: false
+}));
 
-function broadcast(data: any) {
+app.use(usersValidator.doesCurrentSessionUserExists);
+
+export function broadcast(data: any) {
     wss.clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(data));
         }
     });
 }
+
+// Add routes to Routers
+app.use('/api/', apiRouter)
+app.use(errorHandler) // Error handling middleware should be the last middleware
+
+// ------------------------------------------
+
+// Start WebSocket
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws: WebSocket) => {
     console.log('Client connected');
