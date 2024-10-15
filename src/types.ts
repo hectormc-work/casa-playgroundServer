@@ -95,7 +95,12 @@ export type RedLightGreenLightOptions = {
 
 export type BabyMonstersOptions = {
     hiddenMonsters: number,
-    carryingCapacity: number
+    carryingCapacity: number,
+    eastFlower: boolean,
+    westFlower: boolean,
+    trioFlowers: boolean,
+    smallFlower: boolean,
+    conductorPads: boolean
 }
 
 export interface GameJSON {
