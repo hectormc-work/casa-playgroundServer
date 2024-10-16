@@ -12,18 +12,6 @@ const router_3 = require("./features/router");
 const router = express_1.default.Router();
 exports.apiRouter = router;
 /**
- * Sends a 'Hello, world' message.
- *
- * @name GET /
- *
- * @return {string} - Welcome message
- *
- * @throws {500} - Server error
- */
-router.get('/', (req, res) => {
-    res.send('Hello, world! Is this going through?');
-});
-/**
  * Reset Everything
  *
  * @name DELETE /

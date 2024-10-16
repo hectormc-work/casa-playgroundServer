@@ -37,11 +37,6 @@ const app = (0, express_1.default)();
 const port = 8080;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-// Middleware for error handling
-function errorHandler(err, req, res, next) {
-    console.error(err.stack);
-    res.status(500).send({ error: 'Something went wrong!' });
-}
 // Initialize cookie session
 app.use((0, express_session_1.default)({
     secret: 'HeathInteractive',
@@ -60,10 +55,25 @@ app.use((req, res, next) => {
     req.broadcast = broadcast; // Attach broadcast function to the req object
     next();
 });
-// Add routes to Routers
-app.use('/api/', router_1.apiRouter);
+/**
+ * Add Routes
+ */
+/**
+ * Sends a 'Hello, world' message.
+ */
+app.get('/', (req, res) => {
+    res.send('Hello, world! Is this going through?');
+});
+app.use('/api', router_1.apiRouter);
+// Middleware for error handling
+function errorHandler(err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send({ error: 'Something went wrong!' });
+}
 app.use(errorHandler); // Error handling middleware should be the last middleware
-// ------------------------------------------
+/**
+ * Start the Servers
+ */
 // Start WebSocket
 const server = http_1.default.createServer(app);
 const wss = new ws_1.WebSocketServer({ server });

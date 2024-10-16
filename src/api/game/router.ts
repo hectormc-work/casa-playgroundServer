@@ -1,4 +1,4 @@
-import express, {NextFunction, Request, Response} from "express";
+import express, {Request, Response} from "express";
 import {getFeatures, getGame, lastRound, setGame, stopGame, updateGame} from "../../casaHandler";
 import {Game} from "../../types";
 
@@ -13,9 +13,7 @@ const router = express.Router();
  *
  * @throws {500} - Server error
  */
-
-
-router.get('/', (req: Request, res: Response, next: NextFunction) => {
+router.get('/', (req: Request, res: Response) => {
     try {
         const game = getGame();
         res.send({ message: 'Got CurrentGame', game });
@@ -36,7 +34,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.post('/', (req: Request, res: Response, next: NextFunction) => {
+router.post('/', (req: Request, res: Response) => {
     try {
         const requestGame = new Game(req.body);
         const game = setGame(requestGame);
@@ -65,7 +63,7 @@ router.post('/', (req: Request, res: Response, next: NextFunction) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.put('/games', (req: Request, res: Response, next: NextFunction) => {
+router.put('/', (req: Request, res: Response) => {
     try {
         const requestGame = new Game(req.body);
         updateGame(requestGame);
@@ -96,7 +94,7 @@ router.put('/games', (req: Request, res: Response, next: NextFunction) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.patch('/games', (req: Request, res: Response, next: NextFunction) => {
+router.patch('/last-round', (req: Request, res: Response) => {
     try {
         lastRound();
 
@@ -125,7 +123,7 @@ router.patch('/games', (req: Request, res: Response, next: NextFunction) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.delete('/games', (req: Request, res: Response, next: NextFunction) => {
+router.delete('/', (req: Request, res: Response) => {
     try {
         const game = stopGame();
         const features = getFeatures()

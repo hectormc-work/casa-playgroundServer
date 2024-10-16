@@ -12,12 +12,6 @@ const port = 8080;
 app.use(cors());
 app.use(express.json());
 
-// Middleware for error handling
-function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
-    console.error(err.stack);
-    res.status(500).send({ error: 'Something went wrong!' });
-}
-
 declare module 'express-session' {
     interface SessionData {
         username: string;
@@ -46,33 +40,33 @@ function broadcast(data: any) {
         }
     });
 }
-
 app.use((req, res, next) => {
     req.broadcast = broadcast; // Attach broadcast function to the req object
     next();
 });
 
-// Add Routes
+/**
+ * Add Routes
+ */
 
 /**
  * Sends a 'Hello, world' message.
- *
- * @name GET /
- *
- * @return {string} - Welcome message
- *
- * @throws {500} - Server error
  */
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello, world! Is this going through?');
 });
+app.use('/api', apiRouter)
 
-
-// Add routes to Routers
-app.use('/api/', apiRouter)
+// Middleware for error handling
+function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
+    console.error(err.stack);
+    res.status(500).send({ error: 'Something went wrong!' });
+}
 app.use(errorHandler) // Error handling middleware should be the last middleware
 
-// ------------------------------------------
+/**
+ * Start the Servers
+ */
 
 // Start WebSocket
 const server = http.createServer(app);

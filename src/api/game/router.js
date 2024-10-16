@@ -18,8 +18,9 @@ exports.gameRouter = router;
  *
  * @throws {500} - Server error
  */
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
     try {
+        console.log("hi");
         const game = (0, casaHandler_1.getGame)();
         res.send({ message: 'Got CurrentGame', game });
     }
@@ -39,7 +40,7 @@ router.get('/', (req, res, next) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.post('/', (req, res, next) => {
+router.post('/', (req, res) => {
     try {
         const requestGame = new types_1.Game(req.body);
         const game = (0, casaHandler_1.setGame)(requestGame);
@@ -66,7 +67,7 @@ router.post('/', (req, res, next) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.put('/games', (req, res, next) => {
+router.put('/', (req, res) => {
     try {
         const requestGame = new types_1.Game(req.body);
         (0, casaHandler_1.updateGame)(requestGame);
@@ -94,7 +95,7 @@ router.put('/games', (req, res, next) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.patch('/games', (req, res, next) => {
+router.patch('/last-round', (req, res) => {
     try {
         (0, casaHandler_1.lastRound)();
         const features = (0, casaHandler_1.getFeatures)();
@@ -119,7 +120,7 @@ router.patch('/games', (req, res, next) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.delete('/games', (req, res, next) => {
+router.delete('/', (req, res) => {
     try {
         const game = (0, casaHandler_1.stopGame)();
         const features = (0, casaHandler_1.getFeatures)();
