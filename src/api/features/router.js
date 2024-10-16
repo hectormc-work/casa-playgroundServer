@@ -1,9 +1,13 @@
-import express, {NextFunction, Request, Response} from "express";
-import {getFeatures, getFeatureState, setFeature} from "../../casaHandler";
-import {Feature, FeatureName, FeatureState} from "../../types";
-
-const router = express.Router();
-
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.featuresRouter = void 0;
+const express_1 = __importDefault(require("express"));
+const casaHandler_1 = require("../../casaHandler");
+const router = express_1.default.Router();
+exports.featuresRouter = router;
 /**
  * Get the state of ALL features in body
  *
@@ -13,15 +17,15 @@ const router = express.Router();
  *
  * @throws {500} - Server error
  */
-router.get('/', (req: Request, res: Response, next: NextFunction) => {
+router.get('/', (req, res, next) => {
     try {
-        const features = getFeatures();
+        const features = (0, casaHandler_1.getFeatures)();
         res.status(200).send({ message: 'Retrieved all Features', features });
-    } catch (error) {
+    }
+    catch (error) {
         next(error);
     }
 });
-
 /**
  * Get the state of a specific feature in body
  *
@@ -33,23 +37,22 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
  * @throws {404} - Feature not found
  * @throws {500} - Server error
  */
-router.get('/:name', (req: Request, res: Response, next: NextFunction) => {
+router.get('/:name', (req, res, next) => {
     try {
         const { name } = req.params;
-        const state = getFeatureState(name as FeatureName);
-        const feature = { name, state } as Feature;
-
+        const state = (0, casaHandler_1.getFeatureState)(name);
+        const feature = { name, state };
         if (state) {
             res.status(200).send({ message: 'Retrieved Feature', feature });
-        } else {
+        }
+        else {
             res.status(404).send({ message: 'Feature not found', feature });
         }
-
-    } catch (error) {
+    }
+    catch (error) {
         next(error);
     }
 });
-
 /**
  * Change a feature's state to state given in req.body
  *
@@ -62,28 +65,24 @@ router.get('/:name', (req: Request, res: Response, next: NextFunction) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.put('/:name', (req: Request, res: Response, next: NextFunction) => {
+router.put('/:name', (req, res, next) => {
     try {
         const { name } = req.params;
-        const state: FeatureState = req.body;
-        const feature = { name, state } as Feature;
-
-        const success = setFeature(name as FeatureName, state);
-
+        const state = req.body;
+        const feature = { name, state };
+        const success = (0, casaHandler_1.setFeature)(name, state);
         if (success) {
-            const message = { message: 'Changed Feature', feature }
-
+            const message = { message: 'Changed Feature', feature };
             res.status(200).send(message);
             if (req.broadcast) {
                 req.broadcast(message);
             }
-        } else {
+        }
+        else {
             res.status(400).send({ message: 'Could not Change Feature', feature });
         }
-
-    } catch (error) {
+    }
+    catch (error) {
         next(error);
     }
 });
-
-export { router as featuresRouter }

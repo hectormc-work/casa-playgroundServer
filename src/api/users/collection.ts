@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 
 type User = {
     username: string;
@@ -6,12 +5,12 @@ type User = {
 }
 
 const users: User[] = [
-    { username: 'demo', password: bcrypt.hashSync('password', 10) }
+    { username: 'demo', password: 'password' }
 ];
 
 class UserCollection {
     static async findOneByUsernameAndPassword(username: string, password: string) {
-        return users.find(u => (u.username === username) && (bcrypt.compareSync(password, u.password)))
+        return users.find(u => (u.username === username) && password === u.password)
     }
 
     static async findOneByUsername(username: string) {
