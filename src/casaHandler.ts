@@ -89,6 +89,6 @@ export function stopGame() {
  */
 export function resetComputer() {
     casaState.reset()
-    // TODO: reset
+    // TODO Ian - have max reset. I am setting to features to casaState.getDefaultFeatures()
     return true
 }

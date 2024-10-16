@@ -17,7 +17,7 @@ const express_1 = __importDefault(require("express"));
 const collection_1 = __importDefault(require("./collection"));
 const router = express_1.default.Router();
 exports.usersRouter = router;
-router.post('/session', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/session', [], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
     // Find user (replace this with database query in real use case)
     const user = yield collection_1.default.findOneByUsernameAndPassword(username, password);

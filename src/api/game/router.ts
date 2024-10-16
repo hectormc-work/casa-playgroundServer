@@ -1,6 +1,7 @@
 import express, {Request, Response} from "express";
 import {getFeatures, getGame, lastRound, setGame, stopGame, updateGame} from "../../casaHandler";
 import {Game} from "../../types";
+import {createGame} from "./utils";
 
 const router = express.Router();
 
@@ -13,7 +14,9 @@ const router = express.Router();
  *
  * @throws {500} - Server error
  */
-router.get('/', (req: Request, res: Response) => {
+router.get(
+    '/',
+    (req: Request, res: Response) => {
     try {
         const game = getGame();
         res.send({ message: 'Got CurrentGame', game });
@@ -34,10 +37,12 @@ router.get('/', (req: Request, res: Response) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.post('/', (req: Request, res: Response) => {
+router.post(
+    '/',
+    [],
+    (req: Request, res: Response) => {
     try {
-        const requestGame = new Game(req.body);
-        const game = setGame(requestGame);
+        const game = setGame(createGame(req));
         const features = getFeatures()
 
         const message = { message: 'Game started', game, features }
@@ -63,9 +68,12 @@ router.post('/', (req: Request, res: Response) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.put('/', (req: Request, res: Response) => {
+router.put(
+    '/',
+    [],
+    (req: Request, res: Response) => {
     try {
-        const requestGame = new Game(req.body);
+        const requestGame = createGame(req);
         updateGame(requestGame);
 
         const features = getFeatures()

@@ -64,7 +64,7 @@ class CasaState {
         return this.game;
     }
     reset() {
-        this.features = {};
+        this.features = this.getDefaultFeatures();
         this.game = null;
         this.saveState();
     }

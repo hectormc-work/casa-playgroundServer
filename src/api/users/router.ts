@@ -3,7 +3,10 @@ import UserCollection from "./collection";
 
 const router = express.Router();
 
-router.post('/session', async (req: Request, res: Response) => {
+router.post(
+    '/session',
+    [],
+    async (req: Request, res: Response) => {
     const {username, password} = req.body;
 
     // Find user (replace this with database query in real use case)

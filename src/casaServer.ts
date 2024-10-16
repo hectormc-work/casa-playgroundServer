@@ -5,6 +5,7 @@ import http from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import { apiRouter } from "./api/router";
 import * as usersValidator from './api/users/middleware';
+import {Game} from "./types";
 
 const app = express();
 const port = 8080;
@@ -21,6 +22,7 @@ declare module 'express-session' {
 declare module "express-serve-static-core" {
     interface Request {
         broadcast?: any;
+        game?: Game;
     }
 }
 

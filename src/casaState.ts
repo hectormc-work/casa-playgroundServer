@@ -77,7 +77,7 @@ export default class CasaState {
     }
 
     public reset() {
-        this.features = {}
+        this.features = this.getDefaultFeatures()
         this.game = null
         this.saveState()
     }

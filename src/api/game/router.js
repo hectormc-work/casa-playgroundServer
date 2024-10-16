@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.gameRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const casaHandler_1 = require("../../casaHandler");
-const types_1 = require("../../types");
+const utils_1 = require("./utils");
 const router = express_1.default.Router();
 exports.gameRouter = router;
 /**
@@ -20,7 +20,6 @@ exports.gameRouter = router;
  */
 router.get('/', (req, res) => {
     try {
-        console.log("hi");
         const game = (0, casaHandler_1.getGame)();
         res.send({ message: 'Got CurrentGame', game });
     }
@@ -40,10 +39,9 @@ router.get('/', (req, res) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.post('/', (req, res) => {
+router.post('/', [], (req, res) => {
     try {
-        const requestGame = new types_1.Game(req.body);
-        const game = (0, casaHandler_1.setGame)(requestGame);
+        const game = (0, casaHandler_1.setGame)((0, utils_1.createGame)(req));
         const features = (0, casaHandler_1.getFeatures)();
         const message = { message: 'Game started', game, features };
         res.status(200).send(message);
@@ -67,9 +65,9 @@ router.post('/', (req, res) => {
  * @throws {400} - Bad request if validation fails
  * @throws {500} - Server error
  */
-router.put('/', (req, res) => {
+router.put('/', [], (req, res) => {
     try {
-        const requestGame = new types_1.Game(req.body);
+        const requestGame = (0, utils_1.createGame)(req);
         (0, casaHandler_1.updateGame)(requestGame);
         const features = (0, casaHandler_1.getFeatures)();
         const game = (0, casaHandler_1.getGame)();
