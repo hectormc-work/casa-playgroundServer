@@ -67,6 +67,7 @@ function checkGameEnd(gameWasOngoing) {
     }
     if (gameWasOngoing && !game.isOngoing()) {
         // TODO: call max here
+        casaState.setGame(null);
         return false;
     }
     return game.isOngoing(); // game still going
@@ -87,7 +88,7 @@ function stopGame() {
     const defaultFeatures = casaState.getDefaultFeatures();
     casaState.setFeaturesMode(defaultFeatures);
     casaState.setGame(null);
-    return true;
+    return casaState.getGame();
 }
 exports.stopGame = stopGame;
 /**

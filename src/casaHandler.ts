@@ -26,6 +26,7 @@ export function getGame() {
 export function setFeature(featureName: FeatureName, state: FeatureState) {
     const prev_state = casaState.getFeatureState(featureName);
 
+    // MAX
     if (prev_state) {
         // updateFeatureState(featureName, state, prev_state)
     } else {
@@ -37,6 +38,7 @@ export function setFeature(featureName: FeatureName, state: FeatureState) {
 }
 
 export function setGame(game: Game) {
+    // MAX
     // startGame(game)
     casaState.setGame(game)
     return casaState.getGame()
@@ -59,6 +61,7 @@ export function updateGame(game: Game) {
 
 export function lastRound() {
     const game = casaState.getGame()
+    // MAX
     // maxSetLastRound(game.name)
 }
 
@@ -70,6 +73,7 @@ export function checkGameEnd(gameWasOngoing: boolean) {
 
     if (gameWasOngoing && !game.isOngoing()) {
         // TODO: call max here
+        casaState.setGame(null)
         return false
     }
 
@@ -87,13 +91,14 @@ export function checkGameEnd(gameWasOngoing: boolean) {
 export function stopGame() {
     const currentGame = casaState.getGame()
     if (currentGame) {
+        // MAX
         // endGame(currentGame.name)
     }
 
     const defaultFeatures = casaState.getDefaultFeatures()
     casaState.setFeaturesMode(defaultFeatures)
     casaState.setGame(null)
-    return true
+    return casaState.getGame()
 }
 
 /**

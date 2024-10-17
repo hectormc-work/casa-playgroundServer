@@ -83,11 +83,7 @@ class CasaState {
         }
         // Features not in newFeatures (and thus didn't just get set by above)
         const leftOutFeatures = oldFeatures.filter((featureName) => { return !newFeatures.includes(featureName); });
-        console.log(oldFeatures);
-        console.log(newFeatures);
-        console.log(leftOutFeatures);
         leftOutFeatures.forEach((featureName) => {
-            console.log(`Set: ${featureName} to default`);
             this.restoreFeatureToDefaultState(featureName);
         });
     }
