@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetComputer = exports.stopGame = exports.lastRound = exports.updateGame = exports.setGame = exports.setFeature = exports.getGame = exports.getFeatures = exports.getFeatureState = void 0;
+exports.resetComputer = exports.stopGame = exports.checkGameEnd = exports.lastRound = exports.updateGame = exports.setGame = exports.setFeature = exports.getGame = exports.getFeatures = exports.getFeatureState = void 0;
 const casaState_1 = __importDefault(require("./casaState"));
 const casaState = casaState_1.default.getInstance();
 /*********************************************
@@ -60,6 +60,18 @@ function lastRound() {
     // maxSetLastRound(game.name)
 }
 exports.lastRound = lastRound;
+function checkGameEnd(gameWasOngoing) {
+    const game = casaState.getGame();
+    if (!game) {
+        return false;
+    }
+    if (gameWasOngoing && !game.isOngoing()) {
+        // TODO: call max here
+        return false;
+    }
+    return game.isOngoing(); // game still going
+}
+exports.checkGameEnd = checkGameEnd;
 /*********************************************
  * End / Reset
  **********************************************/

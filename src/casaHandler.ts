@@ -62,6 +62,20 @@ export function lastRound() {
     // maxSetLastRound(game.name)
 }
 
+export function checkGameEnd(gameWasOngoing: boolean) {
+    const game = casaState.getGame()
+    if (!game) {
+        return false;
+    }
+
+    if (gameWasOngoing && !game.isOngoing()) {
+        // TODO: call max here
+        return false
+    }
+
+    return game.isOngoing() // game still going
+}
+
 /*********************************************
  * End / Reset
  **********************************************/

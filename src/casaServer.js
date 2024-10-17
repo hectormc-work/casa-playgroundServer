@@ -33,6 +33,7 @@ const http_1 = __importDefault(require("http"));
 const ws_1 = require("ws");
 const router_1 = require("./api/router");
 const usersValidator = __importStar(require("./api/users/middleware"));
+const casaHandler_1 = require("./casaHandler");
 const app = (0, express_1.default)();
 const port = 8080;
 app.use((0, cors_1.default)());
@@ -86,7 +87,11 @@ wss.on('connection', (ws) => {
         console.log('Client disconnected');
     });
 });
+let gameWasOngoing = false;
 // Start the Express server
 server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
+    setInterval(() => {
+        gameWasOngoing = (0, casaHandler_1.checkGameEnd)(gameWasOngoing);
+    }, 1000); // 1000ms = 1 second
 });

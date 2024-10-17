@@ -6,6 +6,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { apiRouter } from "./api/router";
 import * as usersValidator from './api/users/middleware';
 import {Game} from "./types";
+import {checkGameEnd} from "./casaHandler";
 
 const app = express();
 const port = 8080;
@@ -86,7 +87,12 @@ wss.on('connection', (ws: WebSocket) => {
     });
 });
 
+let gameWasOngoing = false
 // Start the Express server
 server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
+
+    setInterval(() => {
+        gameWasOngoing = checkGameEnd(gameWasOngoing);
+    }, 1000); // 1000ms = 1 second
 });
