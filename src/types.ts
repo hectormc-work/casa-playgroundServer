@@ -28,13 +28,14 @@ export enum Mode {
     pebblesFunky = 'funky',
     pebblesHipHop = 'hiphop',
     pebblesTrain = 'train',
-    pebblesOrchestra = 'orch'
+    pebblesOrchestra = 'orch',
+    disabled = 'disabled'
 }
 
 export enum TargetOption {
-    fast = 'Fast',
-    medium = 'Medium',
-    slow = 'Slow'
+    fast = 2,
+    medium = 1,
+    slow = 0
 }
 
 export type FeatureState = {
@@ -42,7 +43,6 @@ export type FeatureState = {
     muted: boolean,
     mode: Mode,
     modeOption?: TargetOption | number,
-    enabled?: boolean
 }
 
 export enum FeatureName {
@@ -56,7 +56,8 @@ export enum FeatureName {
     stairsEast = 'stairsA',
     stairsWest = 'stairsB',
     conductor = 'pads',
-    pebbles = 'pebbles'
+    pebbles = 'pebbles',
+    waterFountain = 'waterFountain',
 }
 
 export type Feature = {
@@ -165,6 +166,13 @@ export class Game {
         } else if (this.name === GameName.monster) {
             const options = this.options as BabyMonstersOptions
             features.push(FeatureName.kalliroscope)
+            features.push(FeatureName.conductor)
+            features.push(FeatureName.flowerTopLeft)
+            features.push(FeatureName.flowerTopRight)
+            features.push(FeatureName.flowerTrioLeft)
+            features.push(FeatureName.flowerTrioMiddle)
+            features.push(FeatureName.flowerTrioRight)
+            features.push(FeatureName.flowerSmall)
         }
 
         return features
