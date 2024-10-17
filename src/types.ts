@@ -32,6 +32,22 @@ export enum Mode {
     disabled = 'disabled'
 }
 
+export const GAME_MODES = [Mode.rlgl, Mode.space, Mode.monster]
+
+export function gameNameToGameMode(gameName: GameName) {
+    let gameMode;
+
+    if (gameName === GameName.space) {
+        gameMode = Mode.space
+    } else if (gameName === GameName.monster) {
+        gameMode = Mode.monster
+    } else {
+        gameMode = Mode.rlgl
+    }
+
+    return gameMode
+}
+
 export enum TargetOption {
     fast = 2,
     medium = 1,
@@ -64,6 +80,9 @@ export type Feature = {
     name: FeatureName,
     state: FeatureState,
 }
+
+export type Features = Feature[]
+export type FeaturesMap = Partial<Record<FeatureName, FeatureState>>
 
 // Games
 
@@ -147,7 +166,7 @@ export class Game {
         return false;
     }
 
-    participatingFeatures(){
+    participatingFeatureNames(){
         const features = [] as Array<FeatureName>
         if (!this.isOngoing()) {
             return features
@@ -166,13 +185,16 @@ export class Game {
         } else if (this.name === GameName.monster) {
             const options = this.options as BabyMonstersOptions
             features.push(FeatureName.kalliroscope)
-            features.push(FeatureName.conductor)
-            features.push(FeatureName.flowerTopLeft)
-            features.push(FeatureName.flowerTopRight)
-            features.push(FeatureName.flowerTrioLeft)
-            features.push(FeatureName.flowerTrioMiddle)
-            features.push(FeatureName.flowerTrioRight)
-            features.push(FeatureName.flowerSmall)
+
+            if (options.conductorPads) { features.push(FeatureName.conductor) }
+            if (options.eastFlower) { features.push(FeatureName.flowerTopLeft) }
+            if (options.westFlower) { features.push(FeatureName.flowerTopRight) }
+            if (options.smallFlower) { features.push(FeatureName.flowerSmall) }
+            if (options.trioFlowers) {
+                features.push(FeatureName.flowerTrioLeft)
+                features.push(FeatureName.flowerTrioMiddle)
+                features.push(FeatureName.flowerTrioRight)
+            }
         }
 
         return features

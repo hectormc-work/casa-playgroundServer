@@ -1,11 +1,22 @@
 import fs from "fs";
-import {Feature, FeatureState, Game, GameName, Pace, RedLightGreenLightOptions} from "./types";
+import {
+    Feature,
+    FeatureName,
+    FeaturesMap,
+    FeatureState,
+    Game, GAME_MODES,
+    GameName, gameNameToGameMode,
+    Mode,
+    Pace,
+    RedLightGreenLightOptions,
+} from "./types";
 
 export default class CasaState {
     private static instance: CasaState; // There will only ever be one of these State classes
     private static readonly STATE_PATH = 'state.json';
     private static readonly DEFAULT_STATE_PATH = 'state-default.json';
-    private features: { [featureName: string]: FeatureState } = {};
+    private features: FeaturesMap = {};
+    private readonly defaultFeatures: FeaturesMap;
     private game: Game | null = new Game({
         name: GameName.rlgl,
         duration: 10,
@@ -21,6 +32,19 @@ export default class CasaState {
 
     private constructor() {
         this.loadState()
+
+        if (!fs.existsSync(CasaState.DEFAULT_STATE_PATH)) {
+            console.log(`File not found: ${CasaState.DEFAULT_STATE_PATH}`);
+            this.defaultFeatures = {}
+        } else {
+            console.log('Loaded state-default.json')
+            const rawData = fs.readFileSync(CasaState.DEFAULT_STATE_PATH, 'utf8');
+            const state = JSON.parse(rawData);
+
+            this.defaultFeatures = state.features;
+        }
+
+
     }
 
     // Static method to get the single instance of the class
@@ -40,35 +64,65 @@ export default class CasaState {
         this.saveState()
     }
 
-    public setFeature(featureName: string, state: FeatureState) {
+    public setFeature(featureName: FeatureName, state: FeatureState) {
         this.features[featureName] = state;
         this.saveState()
     }
 
-    // Set Features' Mode
-    public setFeaturesMode(features: { [featureName: string]: FeatureState }) {
-        for (const featureName in features) {
-            const currentFeature = this.features[featureName];
-            const newFeature = features[featureName];
+    public setFeatureMode(featureName: FeatureName, mode: Mode) {
+        const featureState = this.getFeatureState(featureName);
+        if (featureState) {
+            featureState.mode = mode
+        }
+    }
 
-            if (currentFeature) {
-                currentFeature.mode = newFeature.mode;
-            }
+    // Set Features' Mode
+    public setFeaturesMode(features: FeaturesMap) {
+        for (const name in features) {
+            const featureName = name as FeatureName;
+            const featureState = this.features[featureName] as FeatureState;
+            this.setFeatureMode(featureName, featureState.mode);
         }
 
         this.saveState()
     }
 
     public setGame(game: Game | null) {
+        if (this.game !== game) {
+            this.updateFeaturesGameStatus(this.game, game)
+        }
         this.game = game;
         this.saveState()
     }
 
-    public getFeatures() {
-        return Object.keys(this.features).map(name => {return {name, state: this.features[name]} as Feature});
+    private updateFeaturesGameStatus(oldGame: Game|null, newGame: Game|null) {
+        const oldOngoing = (oldGame !== null) && oldGame.isOngoing()
+        const newOngoing = (newGame !== null) && newGame.isOngoing()
+
+        const oldFeatures = oldOngoing ? oldGame.participatingFeatureNames() : []
+        const newFeatures = newOngoing ? newGame.participatingFeatureNames() : []
+
+        if (newOngoing) {
+            newFeatures.forEach((featureName) => {
+                this.setFeatureMode(featureName, gameNameToGameMode(newGame.name))
+            })
+        }
+
+        // Features not in newFeatures (and thus didn't just get set by above)
+        const leftOutFeatures = oldFeatures.filter((featureName) => {return !newFeatures.includes(featureName)})
+        leftOutFeatures.forEach((featureName) => {
+            this.restoreFeatureToDefaultState(featureName)
+        })
     }
 
-    public getFeatureState(featureName: string): FeatureState | null {
+    public getFeatures() {
+        return Object.keys(this.features).map(name => {
+            const featureName = name as FeatureName;
+            return {name, state: this.features[featureName]} as Feature
+        });
+    }
+
+    public getFeatureState(featureName: FeatureName): FeatureState | undefined {
         return this.features[featureName];
     }
 
@@ -134,6 +188,10 @@ export default class CasaState {
         this.saveState();
     }
 
+    public restoreFeatureToDefaultState(featureName: FeatureName) {
+        this.features[featureName] = this.defaultFeatures[featureName]
+    }
+
     /**********************************************
      * Helpers
      **********************************************/
@@ -143,15 +201,16 @@ export default class CasaState {
      *
      * return {[featureName: string]: FeatureState}
      */
-    public getDefaultFeatures(): { [featureName: string]: FeatureState } {
-        if (!fs.existsSync(CasaState.DEFAULT_STATE_PATH)) {
-            console.log(`File not found: ${CasaState.DEFAULT_STATE_PATH}`);
-            return {};
+    public getDefaultFeatures(): FeaturesMap {
+        return this.defaultFeatures
+    }
+
+    private isInGame(featureName: FeatureName): boolean {
+        const featureState = this.features[featureName];
+        if (!featureState) {
+            return false
         }
 
-        const rawData = fs.readFileSync(CasaState.DEFAULT_STATE_PATH, 'utf8');
-        const state = JSON.parse(rawData);
-
-        return state.features as { [featureName: string]: FeatureState };
+        return GAME_MODES.includes(featureState.mode)
     }
 }

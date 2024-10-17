@@ -20,6 +20,16 @@ class CasaState {
             options: { eastFlower: true, redPace: types_1.Pace.Long }
         });
         this.loadState();
+        if (!fs_1.default.existsSync(CasaState.DEFAULT_STATE_PATH)) {
+            console.log(`File not found: ${CasaState.DEFAULT_STATE_PATH}`);
+            this.defaultFeatures = {};
+        }
+        else {
+            console.log('Loaded state-default.json');
+            const rawData = fs_1.default.readFileSync(CasaState.DEFAULT_STATE_PATH, 'utf8');
+            const state = JSON.parse(rawData);
+            this.defaultFeatures = state.features;
+        }
     }
     // Static method to get the single instance of the class
     static getInstance() {
@@ -39,23 +49,53 @@ class CasaState {
         this.features[featureName] = state;
         this.saveState();
     }
+    setFeatureMode(featureName, mode) {
+        const featureState = this.getFeatureState(featureName);
+        if (featureState) {
+            featureState.mode = mode;
+        }
+    }
     // Set Features' Mode
     setFeaturesMode(features) {
-        for (const featureName in features) {
-            const currentFeature = this.features[featureName];
-            const newFeature = features[featureName];
-            if (currentFeature) {
-                currentFeature.mode = newFeature.mode;
-            }
+        for (const name in features) {
+            const featureName = name;
+            const featureState = this.features[featureName];
+            this.setFeatureMode(featureName, featureState.mode);
         }
         this.saveState();
     }
     setGame(game) {
+        if (this.game !== game) {
+            this.updateFeaturesGameStatus(this.game, game);
+        }
         this.game = game;
         this.saveState();
     }
+    updateFeaturesGameStatus(oldGame, newGame) {
+        const oldOngoing = (oldGame !== null) && oldGame.isOngoing();
+        const newOngoing = (newGame !== null) && newGame.isOngoing();
+        const oldFeatures = oldOngoing ? oldGame.participatingFeatureNames() : [];
+        const newFeatures = newOngoing ? newGame.participatingFeatureNames() : [];
+        if (newOngoing) {
+            newFeatures.forEach((featureName) => {
+                this.setFeatureMode(featureName, (0, types_1.gameNameToGameMode)(newGame.name));
+            });
+        }
+        // Features not in newFeatures (and thus didn't just get set by above)
+        const leftOutFeatures = oldFeatures.filter((featureName) => { return !newFeatures.includes(featureName); });
+        console.log(oldFeatures);
+        console.log(newFeatures);
+        console.log(leftOutFeatures);
+        leftOutFeatures.forEach((featureName) => {
+            console.log(`Set: ${featureName} to default`);
+            this.restoreFeatureToDefaultState(featureName);
+        });
+    }
     getFeatures() {
-        return Object.keys(this.features).map(name => { return { name, state: this.features[name] }; });
+        return Object.keys(this.features).map(name => {
+            const featureName = name;
+            return { name, state: this.features[featureName] };
+        });
     }
     getFeatureState(featureName) {
         return this.features[featureName];
@@ -111,6 +151,9 @@ class CasaState {
         this.game = null;
         this.saveState();
     }
+    restoreFeatureToDefaultState(featureName) {
+        this.features[featureName] = this.defaultFeatures[featureName];
+    }
     /**********************************************
      * Helpers
      **********************************************/
@@ -120,13 +163,14 @@ class CasaState {
      * return {[featureName: string]: FeatureState}
      */
     getDefaultFeatures() {
-        if (!fs_1.default.existsSync(CasaState.DEFAULT_STATE_PATH)) {
-            console.log(`File not found: ${CasaState.DEFAULT_STATE_PATH}`);
-            return {};
+        return this.defaultFeatures;
+    }
+    isInGame(featureName) {
+        const featureState = this.features[featureName];
+        if (!featureState) {
+            return false;
         }
-        const rawData = fs_1.default.readFileSync(CasaState.DEFAULT_STATE_PATH, 'utf8');
-        const state = JSON.parse(rawData);
-        return state.features;
+        return types_1.GAME_MODES.includes(featureState.mode);
     }
 }
 CasaState.STATE_PATH = 'state.json';
