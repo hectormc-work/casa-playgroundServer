@@ -43,8 +43,9 @@ router.post('/', [], (req, res) => {
     try {
         const game = (0, casaHandler_1.setGame)((0, utils_1.createGame)(req));
         const features = (0, casaHandler_1.getFeatures)();
-        const message = { message: 'Game started', game, features };
-        res.status(200).send(message);
+        const message = 'Game started';
+        const httpMessage = { message, game, features };
+        res.status(200).send(httpMessage);
         if (req.broadcast) {
             req.broadcast(message);
         }
@@ -71,8 +72,9 @@ router.put('/', [], (req, res) => {
         (0, casaHandler_1.updateGame)(requestGame);
         const features = (0, casaHandler_1.getFeatures)();
         const game = (0, casaHandler_1.getGame)();
-        const message = { message: 'Game modified', game, features };
-        res.status(202).send(message);
+        const message = 'Game modified';
+        const httpMessage = { message, game, features };
+        res.status(202).send(httpMessage);
         if (req.broadcast) {
             req.broadcast(message);
         }
@@ -98,8 +100,9 @@ router.patch('/last-round', (req, res) => {
         (0, casaHandler_1.lastRound)();
         const features = (0, casaHandler_1.getFeatures)();
         const game = (0, casaHandler_1.getGame)();
-        const message = { message: 'Game modified', game, features };
-        res.status(202).send(message);
+        const message = 'Game modified';
+        const httpMessage = { message, game, features };
+        res.status(202).send(httpMessage);
         if (req.broadcast) {
             req.broadcast(message);
         }
@@ -122,8 +125,9 @@ router.delete('/', (req, res) => {
     try {
         const game = (0, casaHandler_1.stopGame)();
         const features = (0, casaHandler_1.getFeatures)();
-        const message = { message: 'Game Stopped', game, features };
-        res.status(202).send(message);
+        const message = 'Game Stopped';
+        const httpMessage = { game, features };
+        res.status(202).send(httpMessage);
         if (req.broadcast) {
             req.broadcast(message);
         }

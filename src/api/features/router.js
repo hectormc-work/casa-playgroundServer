@@ -72,8 +72,9 @@ router.put('/:name', (req, res, next) => {
         const feature = { name, state };
         const success = (0, casaHandler_1.setFeature)(name, state);
         if (success) {
-            const message = { message: 'Changed Feature', feature };
-            res.status(200).send(message);
+            const message = `Changed FeatureState of: ${name} to: ${state}`;
+            const httpMessage = { message, feature };
+            res.status(200).send(httpMessage);
             if (req.broadcast) {
                 req.broadcast(message);
             }

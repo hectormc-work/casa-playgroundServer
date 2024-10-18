@@ -71,9 +71,10 @@ router.put('/:name', (req: Request, res: Response, next: NextFunction) => {
         const success = setFeature(name as FeatureName, state);
 
         if (success) {
-            const message = { message: 'Changed Feature', feature }
+            const message = `Changed FeatureState of: ${name} to: ${state}`
+            const httpMessage = { message, feature }
 
-            res.status(200).send(message);
+            res.status(200).send(httpMessage);
             if (req.broadcast) {
                 req.broadcast(message);
             }

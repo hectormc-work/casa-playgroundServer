@@ -7,6 +7,7 @@ import { apiRouter } from "./api/router";
 import * as usersValidator from './api/users/middleware';
 import {Game} from "./types";
 import {checkGameEnd} from "./casaHandler";
+import CasaState from "./casaState";
 
 const app = express();
 const port = 8080;
@@ -22,7 +23,7 @@ declare module 'express-session' {
 
 declare module "express-serve-static-core" {
     interface Request {
-        broadcast?: any;
+        broadcast?: (message: string) => void;
         game?: Game;
     }
 }
@@ -36,10 +37,14 @@ app.use(session({
 
 app.use(usersValidator.doesCurrentSessionUserExists);
 
-function broadcast(data: any) {
+const CASA_STATE = CasaState.getInstance()
+
+function broadcast(message: string) {
+    const features = CASA_STATE.getFeatures()
+    const game = CASA_STATE.getGame()
     wss.clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(data));
+            client.send(JSON.stringify({ message, features, game}));
         }
     });
 }
@@ -93,6 +98,6 @@ server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 
     setInterval(() => {
-        gameWasOngoing = checkGameEnd(gameWasOngoing);
+        gameWasOngoing = checkGameEnd(gameWasOngoing, broadcast);
     }, 1000); // 1000ms = 1 second
 });

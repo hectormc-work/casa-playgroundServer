@@ -114,9 +114,6 @@ class Game {
     }
     participatingFeatureNames() {
         const features = [];
-        if (!this.isOngoing()) {
-            return features;
-        }
         if (this.name === GameName.rlgl) {
             const options = this.options;
             if (options.eastFlower) {

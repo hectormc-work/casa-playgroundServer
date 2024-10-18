@@ -72,11 +72,9 @@ class CasaState {
         this.saveState();
     }
     updateFeaturesGameStatus(oldGame, newGame) {
-        const oldOngoing = (oldGame !== null) && oldGame.isOngoing();
-        const newOngoing = (newGame !== null) && newGame.isOngoing();
-        const oldFeatures = oldOngoing ? oldGame.participatingFeatureNames() : [];
-        const newFeatures = newOngoing ? newGame.participatingFeatureNames() : [];
-        if (newOngoing) {
+        const oldFeatures = (oldGame !== null) ? oldGame.participatingFeatureNames() : [];
+        const newFeatures = (newGame !== null) ? newGame.participatingFeatureNames() : [];
+        if (newGame !== null) {
             newFeatures.forEach((featureName) => {
                 this.setFeatureMode(featureName, (0, types_1.gameNameToGameMode)(newGame.name));
             });
@@ -148,7 +146,7 @@ class CasaState {
         this.saveState();
     }
     restoreFeatureToDefaultState(featureName) {
-        this.features[featureName] = this.defaultFeatures[featureName];
+        this.features[featureName] = this.getDefaultFeatures()[featureName];
     }
     /**********************************************
      * Helpers
@@ -159,7 +157,7 @@ class CasaState {
      * return {[featureName: string]: FeatureState}
      */
     getDefaultFeatures() {
-        return this.defaultFeatures;
+        return JSON.parse(JSON.stringify(this.defaultFeatures));
     }
     isInGame(featureName) {
         const featureState = this.features[featureName];

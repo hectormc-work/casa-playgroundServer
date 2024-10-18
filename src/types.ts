@@ -168,9 +168,6 @@ export class Game {
 
     participatingFeatureNames(){
         const features = [] as Array<FeatureName>
-        if (!this.isOngoing()) {
-            return features
-        }
 
         if (this.name === GameName.rlgl) {
             const options = this.options as RedLightGreenLightOptions

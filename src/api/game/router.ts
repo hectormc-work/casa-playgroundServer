@@ -2,6 +2,7 @@ import express, {Request, Response} from "express";
 import {getFeatures, getGame, lastRound, setGame, stopGame, updateGame} from "../../casaHandler";
 import {Game} from "../../types";
 import {createGame} from "./utils";
+import http from "http";
 
 const router = express.Router();
 
@@ -45,9 +46,10 @@ router.post(
         const game = setGame(createGame(req));
         const features = getFeatures()
 
-        const message = { message: 'Game started', game, features }
+        const message = 'Game started'
+        const httpMessage = { message, game, features }
 
-        res.status(200).send(message);
+        res.status(200).send(httpMessage);
         if (req.broadcast) {
             req.broadcast(message);
         }
@@ -79,9 +81,10 @@ router.put(
         const features = getFeatures()
         const game = getGame()
 
-        const message = { message: 'Game modified', game, features }
+        const message = 'Game modified'
+        const httpMessage = { message, game, features }
 
-        res.status(202).send(message);
+        res.status(202).send(httpMessage);
         if (req.broadcast) {
             req.broadcast(message);
         }
@@ -109,9 +112,10 @@ router.patch('/last-round', (req: Request, res: Response) => {
         const features = getFeatures()
         const game = getGame()
 
-        const message = { message: 'Game modified', game, features }
+        const message = 'Game modified'
+        const httpMessage = { message, game, features }
 
-        res.status(202).send(message);
+        res.status(202).send(httpMessage);
         if (req.broadcast) {
             req.broadcast(message);
         }
@@ -136,9 +140,10 @@ router.delete('/', (req: Request, res: Response) => {
         const game = stopGame();
         const features = getFeatures()
 
-        const message = { message: 'Game Stopped', game, features }
+        const message = 'Game Stopped'
+        const httpMessage = { game, features }
 
-        res.status(202).send(message);
+        res.status(202).send(httpMessage);
         if (req.broadcast) {
             req.broadcast(message);
         }

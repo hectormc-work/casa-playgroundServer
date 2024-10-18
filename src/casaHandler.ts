@@ -65,7 +65,7 @@ export function lastRound() {
     // maxSetLastRound(game.name)
 }
 
-export function checkGameEnd(gameWasOngoing: boolean) {
+export function checkGameEnd(gameWasOngoing: boolean, broadcast: (message: string) => void) {
     const game = casaState.getGame()
     if (!game) {
         return false;
@@ -74,6 +74,7 @@ export function checkGameEnd(gameWasOngoing: boolean) {
     if (gameWasOngoing && !game.isOngoing()) {
         // TODO: call max here
         casaState.setGame(null)
+        broadcast('Game Ended')
         return false
     }
 

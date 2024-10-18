@@ -34,6 +34,7 @@ const ws_1 = require("ws");
 const router_1 = require("./api/router");
 const usersValidator = __importStar(require("./api/users/middleware"));
 const casaHandler_1 = require("./casaHandler");
+const casaState_1 = __importDefault(require("./casaState"));
 const app = (0, express_1.default)();
 const port = 8080;
 app.use((0, cors_1.default)());
@@ -45,10 +46,13 @@ app.use((0, express_session_1.default)({
     saveUninitialized: false
 }));
 app.use(usersValidator.doesCurrentSessionUserExists);
-function broadcast(data) {
+const CASA_STATE = casaState_1.default.getInstance();
+function broadcast(message) {
+    const features = CASA_STATE.getFeatures();
+    const game = CASA_STATE.getGame();
     wss.clients.forEach(client => {
         if (client.readyState === ws_1.WebSocket.OPEN) {
-            client.send(JSON.stringify(data));
+            client.send(JSON.stringify({ message, features, game }));
         }
     });
 }
@@ -92,6 +96,6 @@ let gameWasOngoing = false;
 server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
     setInterval(() => {
-        gameWasOngoing = (0, casaHandler_1.checkGameEnd)(gameWasOngoing);
+        gameWasOngoing = (0, casaHandler_1.checkGameEnd)(gameWasOngoing, broadcast);
     }, 1000); // 1000ms = 1 second
 });

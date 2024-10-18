@@ -96,13 +96,10 @@ export default class CasaState {
     }
 
     private updateFeaturesGameStatus(oldGame: Game|null, newGame: Game|null) {
-        const oldOngoing = (oldGame !== null) && oldGame.isOngoing()
-        const newOngoing = (newGame !== null) && newGame.isOngoing()
+        const oldFeatures = (oldGame !== null) ? oldGame.participatingFeatureNames() : []
+        const newFeatures = (newGame !== null) ? newGame.participatingFeatureNames() : []
 
-        const oldFeatures = oldOngoing ? oldGame.participatingFeatureNames() : []
-        const newFeatures = newOngoing ? newGame.participatingFeatureNames() : []
-
-        if (newOngoing) {
+        if (newGame !== null) {
             newFeatures.forEach((featureName) => {
                 this.setFeatureMode(featureName, gameNameToGameMode(newGame.name))
             })
@@ -189,7 +186,7 @@ export default class CasaState {
     }
 
     public restoreFeatureToDefaultState(featureName: FeatureName) {
-        this.features[featureName] = this.defaultFeatures[featureName]
+        this.features[featureName] = this.getDefaultFeatures()[featureName]
     }
 
     /**********************************************
@@ -202,7 +199,7 @@ export default class CasaState {
      * return {[featureName: string]: FeatureState}
      */
     public getDefaultFeatures(): FeaturesMap {
-        return this.defaultFeatures
+        return JSON.parse(JSON.stringify(this.defaultFeatures));
     }
 
     private isInGame(featureName: FeatureName): boolean {

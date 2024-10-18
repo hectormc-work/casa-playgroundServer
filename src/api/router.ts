@@ -23,9 +23,10 @@ router.delete('/', (req: Request, res: Response, next: NextFunction) => {
         const features = getFeatures()
         const game = getGame()
 
-        const message = { message: 'Reset all features', features, game }
+        const message = 'Reset all features'
+        const httpMessage = { message, features, game }
 
-        res.status(202).send(message);
+        res.status(202).send(httpMessage);
         if (req.broadcast) {
             req.broadcast(message);
         }

@@ -26,8 +26,9 @@ router.delete('/', (req, res, next) => {
         (0, casaHandler_1.resetComputer)();
         const features = (0, casaHandler_1.getFeatures)();
         const game = (0, casaHandler_1.getGame)();
-        const message = { message: 'Reset all features', features, game };
-        res.status(202).send(message);
+        const message = 'Reset all features';
+        const httpMessage = { message, features, game };
+        res.status(202).send(httpMessage);
         if (req.broadcast) {
             req.broadcast(message);
         }
