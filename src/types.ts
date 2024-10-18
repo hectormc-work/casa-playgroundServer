@@ -196,4 +196,31 @@ export class Game {
 
         return features
     }
+
+    static allPossibleFeatureNames(name: GameName){
+        let features = [] as Array<FeatureName>;
+
+        if (name === GameName.rlgl) {
+            features = [
+                FeatureName.flowerTopLeft,
+                FeatureName.flowerTopRight,
+                FeatureName.flowerSmall,
+                FeatureName.flowerTrioLeft,
+                FeatureName.flowerTrioMiddle,
+                FeatureName.flowerTrioRight,
+            ]
+        } else if (name === GameName.monster) {
+            features = [
+                FeatureName.conductor,
+                FeatureName.flowerTopLeft,
+                FeatureName.flowerTopRight,
+                FeatureName.flowerSmall,
+                FeatureName.flowerTrioLeft,
+                FeatureName.flowerTrioMiddle,
+                FeatureName.flowerTrioRight,
+            ]
+        }
+
+        return features
+    }
 }

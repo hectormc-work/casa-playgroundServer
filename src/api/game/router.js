@@ -1,11 +1,34 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.gameRouter = void 0;
 const express_1 = __importDefault(require("express"));
-const casaHandler_1 = require("../../casaHandler");
+const handler = __importStar(require("../../casaHandler"));
 const utils_1 = require("./utils");
 const router = express_1.default.Router();
 exports.gameRouter = router;
@@ -20,7 +43,7 @@ exports.gameRouter = router;
  */
 router.get('/', (req, res) => {
     try {
-        const game = (0, casaHandler_1.getGame)();
+        const game = handler.getGame();
         res.send({ message: 'Got CurrentGame', game });
     }
     catch (error) {
@@ -41,8 +64,8 @@ router.get('/', (req, res) => {
  */
 router.post('/', [], (req, res) => {
     try {
-        const game = (0, casaHandler_1.setGame)((0, utils_1.createGame)(req));
-        const features = (0, casaHandler_1.getFeatures)();
+        const game = handler.startGame((0, utils_1.createGame)(req));
+        const features = handler.getFeatures();
         const message = 'Game started';
         const httpMessage = { message, game, features };
         res.status(200).send(httpMessage);
@@ -69,9 +92,9 @@ router.post('/', [], (req, res) => {
 router.put('/', [], (req, res) => {
     try {
         const requestGame = (0, utils_1.createGame)(req);
-        (0, casaHandler_1.updateGame)(requestGame);
-        const features = (0, casaHandler_1.getFeatures)();
-        const game = (0, casaHandler_1.getGame)();
+        handler.updateGame(requestGame);
+        const features = handler.getFeatures();
+        const game = handler.getGame();
         const message = 'Game modified';
         const httpMessage = { message, game, features };
         res.status(202).send(httpMessage);
@@ -97,9 +120,9 @@ router.put('/', [], (req, res) => {
  */
 router.patch('/last-round', (req, res) => {
     try {
-        (0, casaHandler_1.lastRound)();
-        const features = (0, casaHandler_1.getFeatures)();
-        const game = (0, casaHandler_1.getGame)();
+        handler.userLastRound();
+        const features = handler.getFeatures();
+        const game = handler.getGame();
         const message = 'Game modified';
         const httpMessage = { message, game, features };
         res.status(202).send(httpMessage);
@@ -123,8 +146,8 @@ router.patch('/last-round', (req, res) => {
  */
 router.delete('/', (req, res) => {
     try {
-        const game = (0, casaHandler_1.stopGame)();
-        const features = (0, casaHandler_1.getFeatures)();
+        const game = handler.endGame();
+        const features = handler.getFeatures();
         const message = 'Game Stopped';
         const httpMessage = { game, features };
         res.status(202).send(httpMessage);

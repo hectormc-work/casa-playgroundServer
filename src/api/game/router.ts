@@ -1,8 +1,6 @@
 import express, {Request, Response} from "express";
-import {getFeatures, getGame, lastRound, setGame, stopGame, updateGame} from "../../casaHandler";
-import {Game} from "../../types";
+import * as handler from "../../casaHandler";
 import {createGame} from "./utils";
-import http from "http";
 
 const router = express.Router();
 
@@ -19,7 +17,7 @@ router.get(
     '/',
     (req: Request, res: Response) => {
     try {
-        const game = getGame();
+        const game = handler.getGame();
         res.send({ message: 'Got CurrentGame', game });
     } catch (error) {
         res.status(400).send({ message: 'Could not get current Game', error });
@@ -43,8 +41,8 @@ router.post(
     [],
     (req: Request, res: Response) => {
     try {
-        const game = setGame(createGame(req));
-        const features = getFeatures()
+        const game = handler.startGame(createGame(req));
+        const features = handler.getFeatures()
 
         const message = 'Game started'
         const httpMessage = { message, game, features }
@@ -76,10 +74,10 @@ router.put(
     (req: Request, res: Response) => {
     try {
         const requestGame = createGame(req);
-        updateGame(requestGame);
+        handler.updateGame(requestGame);
 
-        const features = getFeatures()
-        const game = getGame()
+        const features = handler.getFeatures()
+        const game = handler.getGame()
 
         const message = 'Game modified'
         const httpMessage = { message, game, features }
@@ -107,10 +105,10 @@ router.put(
  */
 router.patch('/last-round', (req: Request, res: Response) => {
     try {
-        lastRound();
+        handler.userLastRound();
 
-        const features = getFeatures()
-        const game = getGame()
+        const features = handler.getFeatures()
+        const game = handler.getGame()
 
         const message = 'Game modified'
         const httpMessage = { message, game, features }
@@ -137,8 +135,8 @@ router.patch('/last-round', (req: Request, res: Response) => {
  */
 router.delete('/', (req: Request, res: Response) => {
     try {
-        const game = stopGame();
-        const features = getFeatures()
+        const game = handler.endGame();
+        const features = handler.getFeatures()
 
         const message = 'Game Stopped'
         const httpMessage = { game, features }

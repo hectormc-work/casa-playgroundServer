@@ -4,8 +4,10 @@ import {
     FeatureName,
     FeaturesMap,
     FeatureState,
-    Game, GAME_MODES,
-    GameName, gameNameToGameMode,
+    Game,
+    GAME_MODES,
+    GameName,
+    gameNameToGameMode,
     Mode,
     Pace,
     RedLightGreenLightOptions,
@@ -117,6 +119,10 @@ export default class CasaState {
             const featureName = name as FeatureName;
             return {name, state: this.features[featureName]} as Feature
         });
+    }
+
+    public getFeaturesMap() {
+        return JSON.parse(JSON.stringify(this.features));
     }
 
     public getFeatureState(featureName: FeatureName): FeatureState | undefined {

@@ -26,6 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.broadcast = void 0;
 const express_1 = __importDefault(require("express"));
 const express_session_1 = __importDefault(require("express-session"));
 const cors_1 = __importDefault(require("cors"));
@@ -56,6 +57,7 @@ function broadcast(message) {
         }
     });
 }
+exports.broadcast = broadcast;
 app.use((req, res, next) => {
     req.broadcast = broadcast; // Attach broadcast function to the req object
     next();
@@ -96,6 +98,6 @@ let gameWasOngoing = false;
 server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
     setInterval(() => {
-        gameWasOngoing = (0, casaHandler_1.checkGameEnd)(gameWasOngoing, broadcast);
+        gameWasOngoing = (0, casaHandler_1.checkGameEnd)(gameWasOngoing);
     }, 1000); // 1000ms = 1 second
 });

@@ -1,5 +1,5 @@
 import express, {NextFunction, Request, Response} from "express";
-import {getFeatures, getFeatureState, setFeature} from "../../casaHandler";
+import * as handler from "../../casaHandler";
 import {Feature, FeatureName, FeatureState} from "../../types";
 
 const router = express.Router();
@@ -15,7 +15,7 @@ const router = express.Router();
  */
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
     try {
-        const features = getFeatures();
+        const features = handler.getFeatures();
         res.status(200).send({ message: 'Retrieved all Features', features });
     } catch (error) {
         next(error);
@@ -36,7 +36,7 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 router.get('/:name', (req: Request, res: Response, next: NextFunction) => {
     try {
         const { name } = req.params;
-        const state = getFeatureState(name as FeatureName);
+        const state = handler.getFeatureState(name as FeatureName);
         const feature = { name, state } as Feature;
 
         if (state) {
@@ -68,7 +68,7 @@ router.put('/:name', (req: Request, res: Response, next: NextFunction) => {
         const state: FeatureState = req.body;
         const feature = { name, state } as Feature;
 
-        const success = setFeature(name as FeatureName, state);
+        const success = handler.setFeature(name as FeatureName, state);
 
         if (success) {
             const message = `Changed FeatureState of: ${name} to: ${state}`

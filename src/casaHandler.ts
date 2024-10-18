@@ -1,5 +1,10 @@
-import {FeatureName, FeatureState, Game} from "./types";
+import {FeatureName, FeatureState, Game, GameName} from "./types";
 import CasaState from "./casaState";
+// import * as max from "./max";
+import {broadcast} from "./casa_server";
+
+// If you want to make a change, it needs to start here
+// This is the only file that imports CasaState
 
 const casaState = CasaState.getInstance()
 
@@ -28,18 +33,42 @@ export function setFeature(featureName: FeatureName, state: FeatureState) {
 
     // MAX
     if (prev_state) {
-        // updateFeatureState(featureName, state, prev_state)
+        // max.updateFeatureState(featureName, state, prev_state)
     } else {
-        // setFeatureState(featureName, state)
+        // max.setFeatureState(featureName, state)
     }
 
     casaState.setFeature(featureName, state)
     return true
 }
 
-export function setGame(game: Game) {
+export function checkGameEnd(gameWasOngoing: boolean) {
+    const game = casaState.getGame()
+    if (!game) {
+        return false;
+    }
+
+    if (gameWasOngoing && !game.isOngoing()) {
+        endGame()
+        return false
+    }
+
+    return game.isOngoing() // game still going
+}
+
+/*********************************************
+ * End / Reset
+ **********************************************/
+
+/**
+ * Game
+ */
+
+export function startGame(game: Game) {
     // MAX
-    // startGame(game)
+    if (game) {
+        // max.startGame(game)
+    }
     casaState.setGame(game)
     return casaState.getGame()
 }
@@ -54,52 +83,47 @@ export function updateGame(game: Game) {
     if (currentGame) {
         game.startTime = currentGame.startTime;
     }
+    // max.maxUpdateGame(game)
 
     casaState.setGame(game)
     return currentGame
 }
 
-export function lastRound() {
-    const game = casaState.getGame()
-    // MAX
-    // maxSetLastRound(game.name)
-}
+/**
+ * User ended the game:
+ *  set game to null
+ *      side-effect: all features in game reset to default
+ *  tell max to end game
+ */
+export function endGame() {
+    const oldGame = casaState.getGame()
 
-export function checkGameEnd(gameWasOngoing: boolean, broadcast: (message: string) => void) {
-    const game = casaState.getGame()
-    if (!game) {
-        return false;
+    const features = casaState.getFeaturesMap()
+
+    casaState.setGame(null)
+    // TODO: brute force fix for this issue for now
+    if (oldGame) {
+        // MAX
+        // max.endGame(oldGame.name, features) // sends message to max to end game
+    } else {
+        // max.endGame(GameName.monster, features)
+        // max.endGame(GameName.rlgl, features)
     }
 
-    if (gameWasOngoing && !game.isOngoing()) {
-        // TODO: call max here
-        casaState.setGame(null)
-        broadcast('Game Ended')
-        return false
-    }
+    broadcast('Game Ended')
 
-    return game.isOngoing() // game still going
+    return casaState.getGame()
 }
-
-/*********************************************
- * End / Reset
- **********************************************/
 
 /**
- * Set game to null
- * Set Features to default Modes
+ * User has set game to last round
  */
-export function stopGame() {
-    const currentGame = casaState.getGame()
-    if (currentGame) {
+export function userLastRound() {
+    const game = casaState.getGame()
+    if (game !== null) {
         // MAX
-        // endGame(currentGame.name)
+        // max.maxSetLastRound(game.name)
     }
-
-    const defaultFeatures = casaState.getDefaultFeatures()
-    casaState.setFeaturesMode(defaultFeatures)
-    casaState.setGame(null)
-    return casaState.getGame()
 }
 
 /**
@@ -107,8 +131,8 @@ export function stopGame() {
  *
  * Primarily happens on request from Webapp
  */
-export function resetComputer() {
-    casaState.reset()
-    // TODO Ian - have max reset. I am setting to features to casaState.getDefaultFeatures()
+export function reset() {
+    casaState.restoreDefaultState()
+    // max.resetServer();
     return true
 }

@@ -1,5 +1,5 @@
 import express, {NextFunction, Request, Response} from "express";
-import {getFeatures, getGame, resetComputer} from "../casaHandler";
+import * as handler from "../casaHandler";
 import {usersRouter} from "./users/router";
 import {gameRouter} from "./game/router";
 import {featuresRouter} from "./features/router";
@@ -19,9 +19,9 @@ const router = express.Router();
  */
 router.delete('/', (req: Request, res: Response, next: NextFunction) => {
     try {
-        resetComputer()
-        const features = getFeatures()
-        const game = getGame()
+        handler.reset()
+        const features = handler.getFeatures()
+        const game = handler.getGame()
 
         const message = 'Reset all features'
         const httpMessage = { message, features, game }

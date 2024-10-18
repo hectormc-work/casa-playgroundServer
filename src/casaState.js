@@ -91,6 +91,9 @@ class CasaState {
             return { name, state: this.features[featureName] };
         });
     }
+    getFeaturesMap() {
+        return JSON.parse(JSON.stringify(this.features));
+    }
     getFeatureState(featureName) {
         return this.features[featureName];
     }

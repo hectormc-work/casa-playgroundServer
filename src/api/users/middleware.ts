@@ -1,4 +1,4 @@
-import type {Request, Response, NextFunction} from 'express';
+import type {NextFunction, Request, Response} from 'express';
 import UserCollection from "./collection";
 
 const doesCurrentSessionUserExists = async (req: Request, res: Response, next: NextFunction) => {

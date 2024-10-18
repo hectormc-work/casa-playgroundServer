@@ -1,9 +1,9 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import http from 'http';
-import { WebSocketServer, WebSocket } from 'ws';
-import { apiRouter } from "./api/router";
+import {WebSocket, WebSocketServer} from 'ws';
+import {apiRouter} from "./api/router";
 import * as usersValidator from './api/users/middleware';
 import {Game} from "./types";
 import {checkGameEnd} from "./casaHandler";
@@ -39,7 +39,7 @@ app.use(usersValidator.doesCurrentSessionUserExists);
 
 const CASA_STATE = CasaState.getInstance()
 
-function broadcast(message: string) {
+export function broadcast(message: string) {
     const features = CASA_STATE.getFeatures()
     const game = CASA_STATE.getGame()
     wss.clients.forEach(client => {
@@ -98,6 +98,6 @@ server.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 
     setInterval(() => {
-        gameWasOngoing = checkGameEnd(gameWasOngoing, broadcast);
+        gameWasOngoing = checkGameEnd(gameWasOngoing);
     }, 1000); // 1000ms = 1 second
 });

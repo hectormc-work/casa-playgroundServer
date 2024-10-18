@@ -154,5 +154,30 @@ class Game {
         }
         return features;
     }
+    static allPossibleFeatureNames(name) {
+        let features = [];
+        if (name === GameName.rlgl) {
+            features = [
+                FeatureName.flowerTopLeft,
+                FeatureName.flowerTopRight,
+                FeatureName.flowerSmall,
+                FeatureName.flowerTrioLeft,
+                FeatureName.flowerTrioMiddle,
+                FeatureName.flowerTrioRight,
+            ];
+        }
+        else if (name === GameName.monster) {
+            features = [
+                FeatureName.conductor,
+                FeatureName.flowerTopLeft,
+                FeatureName.flowerTopRight,
+                FeatureName.flowerSmall,
+                FeatureName.flowerTrioLeft,
+                FeatureName.flowerTrioMiddle,
+                FeatureName.flowerTrioRight,
+            ];
+        }
+        return features;
+    }
 }
 exports.Game = Game;
