@@ -5,46 +5,51 @@ exports.Game = exports.Pace = exports.RLGLColors = exports.GameName = exports.Fe
 var Mode;
 (function (Mode) {
     //flower
-    Mode["funky"] = "flower_gtr";
-    Mode["orchestra"] = "flower_orch";
-    Mode["beats"] = "flower_init";
-    Mode["target"] = "target_test";
-    Mode["brash"] = "bold_and_brash";
-    Mode["thump"] = "big_thump";
-    Mode["rlgl"] = "red_green";
+    Mode["flowerFunky"] = "flower_gtr";
+    Mode["flowerOrchestra"] = "flower_orch";
+    Mode["flowerBeats"] = "flower_init";
+    Mode["flowerTarget"] = "target_test";
+    Mode["flowerBrash"] = "bold_and_brash";
+    Mode["flowerThump"] = "big_thump";
     //conductor pads
-    Mode["thumpPad"] = "thump_pads";
-    // flower and conductor
-    Mode["monster"] = "monster";
+    Mode["conductorThumpPad"] = "thump_pads";
     //stairs
-    Mode["guitar"] = "Guitar_Remix";
-    Mode["orchestraStairs"] = "orchestra_remix";
-    Mode["beatsStairs"] = "Funkybeats_Remix";
-    Mode["path"] = "Center_Pathway";
-    Mode["space"] = "Space";
-    Mode["jungle"] = "animalsForest";
-    Mode["farm"] = "farm_animals";
-    Mode["trains"] = "Trains";
+    Mode["stairsGuitar"] = "Guitar_Remix";
+    Mode["stairsOrchestra"] = "orchestra_remix";
+    Mode["stairsBeats"] = "Funkybeats_Remix";
+    Mode["stairsPath"] = "Center_Pathway";
+    Mode["stairsSpace"] = "Space";
+    Mode["stairsJungle"] = "animalsForest";
+    Mode["stairsFarm"] = "farm_animals";
+    Mode["stairsTrains"] = "Trains";
     //kalliroscope
-    Mode["musicBox"] = "MusicBox";
+    Mode["stairsMusicBox"] = "MusicBox";
     //pebbles
     Mode["pebblesFunky"] = "funky";
     Mode["pebblesHipHop"] = "hiphop";
     Mode["pebblesTrain"] = "train";
     Mode["pebblesOrchestra"] = "orch";
-    Mode["disabled"] = "disabled";
+    Mode["pebblesDisabled"] = "disabled";
+    Mode["fountainMusicMachine"] = "musicMachine";
+    Mode["fountainRainbowHarp"] = "rainbowHarp";
+    Mode["fountainGlassy"] = "glassy";
+    Mode["fountainSpaceCadet"] = "spaceCadet";
+    Mode["fountainMonsterDrums"] = "monsterDrums";
+    Mode["gameRLGL"] = "red_green";
+    Mode["gameMonster"] = "gameMonster";
+    Mode["gameSpace"] = "gameSpace";
 })(Mode || (exports.Mode = Mode = {}));
-exports.GAME_MODES = [Mode.rlgl, Mode.space, Mode.monster];
+exports.GAME_MODES = [Mode.gameRLGL, Mode.gameSpace, Mode.gameMonster];
 function gameNameToGameMode(gameName) {
     let gameMode;
     if (gameName === GameName.space) {
-        gameMode = Mode.space;
+        gameMode = Mode.stairsSpace;
     }
     else if (gameName === GameName.monster) {
-        gameMode = Mode.monster;
+        gameMode = Mode.gameMonster;
     }
     else {
-        gameMode = Mode.rlgl;
+        gameMode = Mode.gameRLGL;
     }
     return gameMode;
 }
@@ -68,7 +73,7 @@ var FeatureName;
     FeatureName["stairsWest"] = "stairsB";
     FeatureName["conductor"] = "pads";
     FeatureName["pebbles"] = "pebbles";
-    FeatureName["waterFountain"] = "waterFountain";
+    FeatureName["fountain"] = "fountain";
 })(FeatureName || (exports.FeatureName = FeatureName = {}));
 // Games
 var GameName;

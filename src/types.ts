@@ -2,47 +2,54 @@
 
 export enum Mode {
     //flower
-    funky = 'flower_gtr',
-    orchestra = 'flower_orch',
-    beats = 'flower_init',
-    target = 'target_test',
-    brash = 'bold_and_brash',
-    thump = 'big_thump',
-    rlgl = 'red_green',
+    flowerFunky = 'flower_gtr',
+    flowerOrchestra = 'flower_orch',
+    flowerBeats = 'flower_init',
+    flowerTarget = 'target_test',
+    flowerBrash = 'bold_and_brash',
+    flowerThump = 'big_thump',
     //conductor pads
-    thumpPad = 'thump_pads',
-    // flower and conductor
-    monster = 'monster',
+    conductorThumpPad = 'thump_pads',
     //stairs
-    guitar = 'Guitar_Remix',
-    orchestraStairs = 'orchestra_remix',
-    beatsStairs = 'Funkybeats_Remix',
-    path = 'Center_Pathway',
-    space = 'Space',
-    jungle = 'animalsForest',
-    farm = 'farm_animals',
-    trains = 'Trains',
+    stairsGuitar = 'Guitar_Remix',
+    stairsOrchestra = 'orchestra_remix',
+    stairsBeats = 'Funkybeats_Remix',
+    stairsPath = 'Center_Pathway',
+    stairsSpace = 'Space',
+    stairsJungle = 'animalsForest',
+    stairsFarm = 'farm_animals',
+    stairsTrains = 'Trains',
     //kalliroscope
-    musicBox = 'MusicBox',
+    stairsMusicBox = 'MusicBox',
     //pebbles
     pebblesFunky = 'funky',
     pebblesHipHop = 'hiphop',
     pebblesTrain = 'train',
     pebblesOrchestra = 'orch',
-    disabled = 'disabled'
+    pebblesDisabled = 'disabled',
+    fountainMusicMachine = 'musicMachine',
+    fountainRainbowHarp = 'rainbowHarp',
+    fountainGlassy = 'glassy',
+    fountainSpaceCadet = 'spaceCadet',
+    fountainMonsterDrums = 'monsterDrums',
+    gameRLGL = 'red_green',
+    gameMonster = 'gameMonster',
+    gameSpace = 'gameSpace',
 }
 
-export const GAME_MODES = [Mode.rlgl, Mode.space, Mode.monster]
+
+
+export const GAME_MODES = [Mode.gameRLGL, Mode.gameSpace, Mode.gameMonster]
 
 export function gameNameToGameMode(gameName: GameName) {
     let gameMode;
 
     if (gameName === GameName.space) {
-        gameMode = Mode.space
+        gameMode = Mode.stairsSpace
     } else if (gameName === GameName.monster) {
-        gameMode = Mode.monster
+        gameMode = Mode.gameMonster
     } else {
-        gameMode = Mode.rlgl
+        gameMode = Mode.gameRLGL
     }
 
     return gameMode
@@ -73,7 +80,7 @@ export enum FeatureName {
     stairsWest = 'stairsB',
     conductor = 'pads',
     pebbles = 'pebbles',
-    waterFountain = 'waterFountain',
+    fountain = 'fountain',
 }
 
 export type Feature = {
