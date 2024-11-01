@@ -14,7 +14,8 @@ function exponentialVolume(volume, featureName) {
         [types_1.FeatureName.stairsEast]: [20, 55],
         [types_1.FeatureName.stairsWest]: [20, 55],
         [types_1.FeatureName.conductor]: [20, 55],
-        [types_1.FeatureName.pebbles]: [20, 55]
+        [types_1.FeatureName.pebbles]: [20, 55],
+        [types_1.FeatureName.fountain]: [20, 55],
     };
     const min = volumeScalars[featureName][0];
     const max = volumeScalars[featureName][1];

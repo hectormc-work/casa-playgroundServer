@@ -49,6 +49,11 @@
       "volume": 70,
       "muted": false,
       "mode": "Music Box"
+    },
+    "fountain": {
+      "volume": 50,
+      "muted": false,
+      "mode": "glassy"
     }
   },
   "currentGame": null

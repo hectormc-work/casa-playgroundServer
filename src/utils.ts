@@ -12,7 +12,8 @@ export function exponentialVolume(volume: number, featureName:FeatureName) {
         [FeatureName.stairsEast]: [20,55],
         [FeatureName.stairsWest]: [20,55],
         [FeatureName.conductor]: [20,55],
-        [FeatureName.pebbles]: [20,55]
+        [FeatureName.pebbles]: [20,55],
+        [FeatureName.fountain]: [20,55],
     } as Record<FeatureName, Array<number>>
     const min = volumeScalars[featureName][0]
     const max = volumeScalars[featureName][1]
