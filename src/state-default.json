@@ -55,10 +55,10 @@
       "muted": false,
       "mode": "funky"
     },
-    "waterFountain": {
+    "fountain": {
       "volume": 50,
       "muted": false,
-      "mode": "thump"
+      "mode": "glassy"
     }
   },
   "game": null
